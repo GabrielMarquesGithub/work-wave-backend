@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node ./dist/infra/server/index.js",
     "dev": "ts-node-dev --transpile-only --poll --ignore-watch node_modules --respawn ./src/infra/server/index.ts",
-    "typeorm": "ts-node-dev ./node_modules/typeorm/cli"
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "express": "^4.18.1",

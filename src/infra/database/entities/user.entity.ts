@@ -1,19 +1,28 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 
-@Entity("books")
-class Book {
+@Entity("users")
+class User {
   @PrimaryColumn()
-  id: string;
+  id?: string;
 
   @Column()
-  name: string;
+  name?: string;
 
   @Column()
-  description: string;
+  email?: string;
+
+  @Column()
+  password?: string;
+
+  @Column()
+  image_url?: string;
+
+  @Column()
+  cep?: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at?: Date;
 
   constructor() {
     if (!this.id) {
@@ -22,4 +31,4 @@ class Book {
   }
 }
 
-export { Book };
+export { User };

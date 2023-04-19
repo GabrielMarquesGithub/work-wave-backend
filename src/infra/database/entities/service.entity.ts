@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 
-@Entity("categories")
-class Category {
+@Entity("services")
+class Service {
   @PrimaryColumn()
   id?: string;
 
@@ -10,7 +10,19 @@ class Category {
   name?: string;
 
   @Column()
+  price?: number;
+
+  @Column()
   description?: string;
+
+  @Column()
+  observation?: string;
+
+  @Column()
+  image_url?: string;
+
+  @Column()
+  priority?: string;
 
   @CreateDateColumn()
   created_at?: Date;
@@ -22,4 +34,4 @@ class Category {
   }
 }
 
-export { Category };
+export { Service };
