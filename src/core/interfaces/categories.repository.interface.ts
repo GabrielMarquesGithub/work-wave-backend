@@ -1,16 +1,11 @@
+import { ICategoryDTO } from "../dtos/category.dto";
+
 import { Category } from "../../infra/database/entities/category.entity";
-//Vejo como uma boa abordagem a manutenção dos tipos gerais dentro deste tipo de arquivo
 
-//DTO ou VO
-interface ICreateCategoryDTO {
-  name: string;
-  description: string;
+export interface ICategoriesRepository {
+  findOneById(id: string): Promise<Category | undefined>;
+  findOneByName(name: string): Promise<Category | undefined>;
+  findAll(): Promise<Category[] | undefined>;
+  create({}: ICategoryDTO): Promise<void>;
+  delete(id: string): Promise<void>;
 }
-
-interface ICategoriesRepository {
-  findByName(name: string): Category | undefined;
-  findAll(): Category[];
-  create({ name, description }: ICreateCategoryDTO): void;
-}
-
-export { ICategoriesRepository, ICreateCategoryDTO };

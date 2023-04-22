@@ -1,11 +1,8 @@
 import { ICategoriesRepository } from "../interfaces/categories.repository.interface";
+import { ICategoryDTO } from "../dtos/category.dto";
+
 import { Category } from "../../infra/database/entities/category.entity";
 import { AppError } from "../errors/app.error";
-
-interface ICreateService {
-  name: string;
-  description: string;
-}
 
 class CategoriesServices {
   private categoriesRepository: ICategoriesRepository;
@@ -14,18 +11,30 @@ class CategoriesServices {
     this.categoriesRepository = categoriesRepository;
   }
 
-  findAll(): Category[] {
-    return this.categoriesRepository.findAll();
+  async findAll(): Promise<Category[]> {
+    return (await this.categoriesRepository.findAll()) ?? [];
   }
 
-  create({ name, description }: ICreateService): void {
-    const categoryAlreadyExists = this.categoriesRepository.findByName(name);
+  async create(categoryDTO: ICategoryDTO): Promise<void> {
+    const category = await this.categoriesRepository.findOneByName(
+      categoryDTO.name
+    );
 
-    if (categoryAlreadyExists) {
+    if (category) {
       throw new AppError("Category already exists", 404);
     }
 
-    this.categoriesRepository.create({ name, description });
+    await this.categoriesRepository.create(categoryDTO);
+  }
+
+  async delete(id: string): Promise<void> {
+    const category = await this.categoriesRepository.findOneById(id);
+
+    if (!category) {
+      throw new AppError("Category does not exist", 404);
+    }
+
+    await this.categoriesRepository.delete(id);
   }
 }
 

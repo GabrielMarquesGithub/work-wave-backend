@@ -1,30 +1,43 @@
-import {
-  ICategoriesRepository,
-  ICreateCategoryDTO,
-} from "../../../core/interfaces/categories.repository.interface";
+import { Repository } from "typeorm";
+
+import { ICategoriesRepository } from "../../../core/interfaces/categories.repository.interface";
+import { ICategoryDTO } from "../../../core/dtos/category.dto";
+
+import { appDataSource } from "..";
+
 import { Category } from "../entities/category.entity";
 
 class CategoriesRepository implements ICategoriesRepository {
-  private categories: Category[];
+  private repository: Repository<Category>;
 
   constructor() {
-    this.categories = [];
+    this.repository = appDataSource.getRepository(Category);
   }
 
-  findByName(name: string): Category | undefined {
-    return this.categories.find((category) => category.name === name);
+  async findOneById(id: string): Promise<Category | undefined> {
+    const category = await this.repository.findOneBy({ id });
+    return category !== null ? category : undefined;
   }
 
-  findAll(): Category[] {
-    return this.categories;
+  async findOneByName(name: string): Promise<Category | undefined> {
+    const category = await this.repository.findOneBy({ name });
+    return category !== null ? category : undefined;
   }
 
-  create({ name, description }: ICreateCategoryDTO): void {
+  async findAll(): Promise<Category[] | undefined> {
+    return await this.repository.find();
+  }
+
+  async create(categoryDTO: ICategoryDTO): Promise<void> {
     const category = new Category();
 
-    Object.assign(category, { name, description, created_at: new Date() });
+    Object.assign(category, categoryDTO);
 
-    this.categories.push(category);
+    await this.repository.save(category);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
   }
 }
 

@@ -9,4 +9,6 @@ categoriesRoutes.get("/", categoriesControllers.findAll);
 
 categoriesRoutes.post("/", categoriesControllers.create);
 
+categoriesRoutes.delete("/", categoriesControllers.delete);
+
 export { categoriesRoutes };

@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { v4 as uuidV4 } from "uuid";
+
+import { User } from "./user.entity";
+import { Category } from "./category.entity";
 
 @Entity("services")
 class Service {
@@ -26,6 +35,14 @@ class Service {
 
   @CreateDateColumn()
   created_at?: Date;
+
+  //relationship with other classes
+
+  @ManyToOne(() => User, (user) => user.services)
+  user?: User;
+
+  @ManyToOne(() => Category, (category) => category.services)
+  category?: User;
 
   constructor() {
     if (!this.id) {

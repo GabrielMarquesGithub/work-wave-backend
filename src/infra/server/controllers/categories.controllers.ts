@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 
+import { ICategoryDTO } from "../../../core/dtos/category.dto";
+
 import { CategoriesRepository } from "../../database/repositories/categories.repository";
 import { CategoriesServices } from "../../../core/services/categories.services";
 
@@ -7,18 +9,26 @@ const categoriesRepository = new CategoriesRepository();
 const categoriesServices = new CategoriesServices(categoriesRepository);
 
 class CategoriesControllers {
-  findAll(req: Request, res: Response): Response {
-    const all = categoriesServices.findAll();
+  async findAll(req: Request, res: Response): Promise<Response> {
+    const all = await categoriesServices.findAll();
 
     return res.json(all);
   }
 
-  create(req: Request, res: Response): Response {
-    const { name, description } = req.body;
+  async create(req: Request, res: Response): Promise<Response> {
+    const categoryDTO = req.body as ICategoryDTO;
 
-    categoriesServices.create({ name, description });
+    await categoriesServices.create(categoryDTO);
 
     return res.status(201).send();
+  }
+
+  async delete(req: Request, res: Response): Promise<Response> {
+    const { id } = req.body;
+
+    await categoriesServices.delete(id);
+
+    return res.status(204).send();
   }
 }
 
