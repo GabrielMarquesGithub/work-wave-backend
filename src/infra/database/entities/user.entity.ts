@@ -9,28 +9,30 @@ import { v4 as uuidV4 } from "uuid";
 
 import { Service } from "./service.entity";
 
+// Usar o operador "!" para indicar que no database esse propriedade é obrigatória
+
 @Entity("users")
 class User {
   @PrimaryColumn()
-  id?: string;
+  id!: string;
 
   @Column()
-  name?: string;
+  name!: string;
 
   @Column()
-  email?: string;
+  email!: string;
 
   @Column()
-  password?: string;
+  password!: string;
 
   @Column()
   image_url?: string;
 
   @Column()
-  cep?: string;
+  cep!: string;
 
   @CreateDateColumn()
-  created_at?: Date;
+  created_at!: Date;
 
   //relationship with other classes
 

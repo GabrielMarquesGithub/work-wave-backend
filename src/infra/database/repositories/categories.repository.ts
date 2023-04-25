@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 
-import { ICategoriesRepository } from "../../../core/interfaces/categories.repository.interface";
+import { ICategoriesRepository } from "../../../core/interfaces/categoriesRepository.interface";
 import { ICategoryDTO } from "../../../core/dtos/category.dto";
 
 import { appDataSource } from "..";

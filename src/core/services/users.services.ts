@@ -1,8 +1,15 @@
-import { IUsersRepository } from "../interfaces/users.repository.interface";
+import { hash } from "bcryptjs";
+
+import { IUsersRepository } from "../interfaces/usersRepository.interface";
 import { IUserDTO } from "../dtos/user.dto";
 
 import { User } from "../../infra/database/entities/user.entity";
 import { AppError } from "../errors/app.error";
+
+import { validateEmailFormat } from "../utils/validation/validateEmailFormat";
+import { validatePasswordFormat } from "../utils/validation/validatePasswordFormat";
+import { validateCEPFormat } from "../utils/validation/validateCEPFormat";
+import { formatCEP } from "../utils/formatting/formatCEP";
 
 class UsersServices {
   private usersRepository: IUsersRepository;
@@ -16,25 +23,13 @@ class UsersServices {
   }
 
   async create(userDTO: IUserDTO): Promise<void> {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const cepRegex = /^\d{5}-?\d{3}$/;
+    validateEmailFormat(userDTO.email);
+    validatePasswordFormat(userDTO.password);
+    validateCEPFormat(userDTO.cep);
 
-    if (!emailRegex.test(userDTO.email)) {
-      throw new AppError("Invalid email format", 400);
-    }
+    userDTO.cep = formatCEP(userDTO.cep);
 
-    if (userDTO.password.length < 8) {
-      throw new AppError("Password must be at least 8 characters long", 400);
-    }
-
-    if (!cepRegex.test(userDTO.cep)) {
-      throw new AppError("Invalid CEP format", 400);
-    }
-
-    //caso o cep não possua hífen ele recebe
-    userDTO.cep = userDTO.cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
-
-    //verificação do email é realizada posteriormente para evitar uma consulta desnecessária
+    // Verificação do email é realizada posteriormente para evitar uma consulta desnecessária
     const userWithEmail = await this.usersRepository.findOneByEmail(
       userDTO.email
     );
@@ -42,7 +37,10 @@ class UsersServices {
       throw new AppError("This email is already related to another user", 400);
     }
 
-    await this.usersRepository.create(userDTO);
+    // Criptografando a senha antes de salvar
+    const hashedPassword = await hash(userDTO.password, 10);
+
+    await this.usersRepository.create({ ...userDTO, password: hashedPassword });
   }
 
   async delete(id: string): Promise<void> {

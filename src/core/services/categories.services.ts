@@ -1,4 +1,4 @@
-import { ICategoriesRepository } from "../interfaces/categories.repository.interface";
+import { ICategoriesRepository } from "../interfaces/categoriesRepository.interface";
 import { ICategoryDTO } from "../dtos/category.dto";
 
 import { Category } from "../../infra/database/entities/category.entity";

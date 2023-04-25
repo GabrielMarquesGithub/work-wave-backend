@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 
-import { IUsersRepository } from "../../../core/interfaces/users.repository.interface";
+import { IUsersRepository } from "../../../core/interfaces/usersRepository.interface";
 import { IUserDTO } from "../../../core/dtos/user.dto";
 
 import { appDataSource } from "..";
