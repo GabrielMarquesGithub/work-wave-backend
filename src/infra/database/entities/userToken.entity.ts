@@ -9,30 +9,19 @@ import {
 import { v4 as uuidV4 } from "uuid";
 
 import { User } from "./user.entity";
-import { Category } from "./category.entity";
 
-@Entity("services")
-class Service {
+// Usar o operador "!" para indicar que no database esse propriedade é obrigatória
+
+@Entity("users_tokens")
+class UserToken {
   @PrimaryColumn()
   id!: string;
 
   @Column()
-  name!: string;
+  refresh_token!: string;
 
   @Column()
-  price!: number;
-
-  @Column()
-  description?: string;
-
-  @Column()
-  observation?: string;
-
-  @Column()
-  image_url!: string;
-
-  @Column()
-  priority!: string;
+  expires_date!: Date;
 
   @CreateDateColumn()
   created_at!: Date;
@@ -42,16 +31,9 @@ class Service {
   @Column()
   user_id!: string;
 
-  @Column()
-  category_id!: string;
-
-  @ManyToOne(() => User, (user) => user.services)
+  @ManyToOne(() => User)
   @JoinColumn({ name: "user_id" })
   user!: User;
-
-  @ManyToOne(() => Category, (category) => category.services)
-  @JoinColumn({ name: "category_id" })
-  category!: User;
 
   constructor() {
     if (!this.id) {
@@ -60,4 +42,4 @@ class Service {
   }
 }
 
-export { Service };
+export { UserToken };

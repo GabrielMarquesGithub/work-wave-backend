@@ -29,10 +29,7 @@ class UsersRepository implements IUsersRepository {
   }
 
   async create(userDTO: IUserDTO): Promise<void> {
-    const user = new User();
-
-    Object.assign(user, userDTO);
-
+    const user = this.repository.create(userDTO);
     await this.repository.save(user);
   }
 

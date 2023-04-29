@@ -4,6 +4,7 @@ import { verify } from "jsonwebtoken";
 import { AppError } from "../../../core/errors/app.error";
 
 import { UsersRepository } from "../../database/repositories/users.repository";
+import { authConfig } from "../../configs/auth.config";
 
 const usersRepository = new UsersRepository();
 
@@ -23,21 +24,25 @@ async function ensureAuthentication(
   const [, token] = authHeader.split(" ");
 
   // Tentar verificar a autenticidade do token usando a chave
+  let sub: string | (() => string) | undefined;
   try {
-    const { sub } = verify(token, "");
-
-    // Checando tipo e tentando buscar user na base de dados
-    const user =
-      typeof sub === "string" ? usersRepository.findOneById(sub) : undefined;
-
-    if (!user) {
-      throw new AppError("User does not exist", 400);
-    }
-
-    next();
+    sub = verify(token, authConfig.secret_token).sub;
   } catch {
     throw new AppError("Invalid authorization token", 400);
   }
+
+  // Checando tipo e tentando buscar user na base de dados
+  if (typeof sub !== "string") {
+    throw new AppError("Invalid subject", 400);
+  }
+
+  const user = await usersRepository.findOneById(sub);
+
+  if (!user) {
+    throw new AppError("User does not exist", 400);
+  }
+
+  next();
 }
 
 export { ensureAuthentication };

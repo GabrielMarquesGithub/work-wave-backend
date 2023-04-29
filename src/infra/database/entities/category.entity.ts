@@ -12,16 +12,16 @@ import { Service } from "./service.entity";
 @Entity("categories")
 class Category {
   @PrimaryColumn()
-  id?: string;
+  id!: string;
 
   @Column()
-  name?: string;
+  name!: string;
 
   @Column()
   description?: string;
 
   @CreateDateColumn()
-  created_at?: Date;
+  created_at!: Date;
 
   //relationship with other classes
 

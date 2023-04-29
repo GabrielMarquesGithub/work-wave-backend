@@ -29,10 +29,7 @@ class CategoriesRepository implements ICategoriesRepository {
   }
 
   async create(categoryDTO: ICategoryDTO): Promise<void> {
-    const category = new Category();
-
-    Object.assign(category, categoryDTO);
-
+    const category = this.repository.create(categoryDTO);
     await this.repository.save(category);
   }
 
