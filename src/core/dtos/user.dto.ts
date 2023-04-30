@@ -4,4 +4,5 @@ export interface IUserDTO {
   email: string;
   password: string;
   cep: string;
+  image_id: string;
 }

@@ -20,7 +20,7 @@ async function ensureAuthentication(
   }
 
   // Bearer <token>
-  // Vamos usar o me´todo split para acessar o token
+  // Vamos usar o método split para acessar o token
   const [, token] = authHeader.split(" ");
 
   // Tentar verificar a autenticidade do token usando a chave

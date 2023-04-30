@@ -1,6 +1,11 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from "typeorm";
 
-export class CreateUsers1681669478389 implements MigrationInterface {
+export class CreateTableUsers1682782475025 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -28,11 +33,6 @@ export class CreateUsers1681669478389 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: "image_url",
-            type: "varchar",
-            isNullable: true,
-          },
-          {
             name: "cep",
             type: "varchar",
             isNullable: false,
@@ -42,12 +42,28 @@ export class CreateUsers1681669478389 implements MigrationInterface {
             type: "timestamp",
             default: "now()",
           },
+          {
+            name: "image_id",
+            type: "uuid",
+            isNullable: true,
+          },
         ],
+      })
+    );
+
+    await queryRunner.createForeignKey(
+      "users",
+      new TableForeignKey({
+        columnNames: ["image_id"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "images",
+        onDelete: "SET NULL",
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey("users", "image_id");
     await queryRunner.dropTable("users");
   }
 }

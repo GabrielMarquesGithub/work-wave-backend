@@ -43,7 +43,7 @@ class Service {
   user_id!: string;
 
   @Column()
-  category_id!: string;
+  category_id?: string;
 
   @ManyToOne(() => User, (user) => user.services)
   @JoinColumn({ name: "user_id" })
@@ -51,7 +51,7 @@ class Service {
 
   @ManyToOne(() => Category, (category) => category.services)
   @JoinColumn({ name: "category_id" })
-  category!: User;
+  category?: User;
 
   constructor() {
     if (!this.id) {

@@ -15,17 +15,19 @@ class UsersRepository implements IUsersRepository {
   }
 
   async findOneById(id: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ id });
+    const user = await this.repository.findOne({
+      where: { id },
+      relations: { image: true },
+    });
     return user !== null ? user : undefined;
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ email });
+    const user = await this.repository.findOne({
+      where: { email },
+      relations: { image: true },
+    });
     return user !== null ? user : undefined;
-  }
-
-  async findAll(): Promise<User[] | undefined> {
-    return await this.repository.find();
   }
 
   async create(userDTO: IUserDTO): Promise<void> {

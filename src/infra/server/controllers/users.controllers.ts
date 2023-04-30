@@ -9,12 +9,6 @@ const usersRepository = new UsersRepository();
 const usersServices = new UsersServices(usersRepository);
 
 class UsersControllers {
-  async findAll(req: Request, res: Response): Promise<Response> {
-    const all = await usersServices.findAll();
-
-    return res.json(all);
-  }
-
   async create(req: Request, res: Response): Promise<Response> {
     const userDTO = req.body as IUserDTO;
 

@@ -15,7 +15,7 @@ import { validatePasswordFormat } from "../utils/validation/validatePasswordForm
 import { authConfig } from "../../infra/configs/auth.config";
 
 interface IResponse {
-  user: Pick<IUserDTO, "email" | "name" | "cep">;
+  user: Pick<IUserDTO, "email" | "name" | "cep"> & { image_url?: string };
   token: string;
   refreshToken: string;
 }
@@ -92,7 +92,8 @@ class AuthenticationServices {
     }
 
     // Desestruturando infos a serem retornadas junto do token
-    const { email, name, cep } = userWithEmail;
+    const { email, name, cep, image } = userWithEmail;
+    const image_url = image ? image.file_path : undefined;
     const tokens = await this.createTokens(userWithEmail.id);
 
     return {
@@ -100,12 +101,13 @@ class AuthenticationServices {
         email,
         name,
         cep,
+        image_url,
       },
       ...tokens,
     };
   }
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string): Promise<IResponse> {
     // Tentar verificar a autenticidade do token usando a chave
     let sub: string | (() => string) | undefined;
     try {
@@ -131,7 +133,8 @@ class AuthenticationServices {
 
     await this.usersTokensRepository.delete(userToken.id);
 
-    const { email, name, cep } = userToken.user;
+    const { email, name, cep, image } = userToken.user;
+    const image_url = image ? image.file_path : undefined;
     const tokens = await this.createTokens(userToken.user.id);
 
     return {
@@ -139,6 +142,7 @@ class AuthenticationServices {
         email,
         name,
         cep,
+        image_url,
       },
       ...tokens,
     };

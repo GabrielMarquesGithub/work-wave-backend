@@ -18,10 +18,6 @@ class UsersServices {
     this.usersRepository = usersRepository;
   }
 
-  async findAll(): Promise<User[]> {
-    return (await this.usersRepository.findAll()) ?? [];
-  }
-
   async create(userDTO: IUserDTO): Promise<void> {
     validateEmailFormat(userDTO.email);
     validatePasswordFormat(userDTO.password);
