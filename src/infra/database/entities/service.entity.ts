@@ -29,10 +29,7 @@ class Service {
   observation?: string;
 
   @Column()
-  image_url!: string;
-
-  @Column()
-  priority!: string;
+  order!: number;
 
   @CreateDateColumn()
   created_at!: Date;
