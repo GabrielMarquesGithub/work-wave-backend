@@ -5,7 +5,7 @@ import { AppError } from "../errors/app.error";
 
 import { IUsersRepository } from "../interfaces/usersRepository.interface";
 import { IUsersTokensRepository } from "../interfaces/usersTokensRepository.interface";
-import { IUserDTO } from "../dtos/user.dto";
+import { IResponseUserDTO } from "../dtos/user.dtos";
 import { IAuthenticationUserDTO } from "../dtos/authenticationUser.dto";
 import { IDateProvider } from "../interfaces/dateProvider.interface";
 
@@ -13,11 +13,15 @@ import { validateEmailFormat } from "../utils/validation/validateEmailFormat";
 import { validatePasswordFormat } from "../utils/validation/validatePasswordFormat";
 
 import { authConfig } from "../../infra/configs/auth.config";
+import { User } from "../../infra/database/entities/user.entity";
 
-interface IResponse {
-  user: Pick<IUserDTO, "email" | "name" | "cep"> & { image_url?: string };
+interface ITokens {
   token: string;
   refreshToken: string;
+}
+
+interface IResponse extends ITokens {
+  user: IResponseUserDTO;
 }
 
 class AuthenticationServices {
@@ -35,7 +39,18 @@ class AuthenticationServices {
     this.dateProvider = dateProvider;
   }
 
-  async createTokens(subject: string) {
+  async createResponse(user: User): Promise<IResponse> {
+    // Desestruturando infos a serem retornadas junto do token
+    const { password, ...responseUser } = user;
+    const tokens = await this.createTokens(user.id);
+
+    return {
+      user: responseUser,
+      ...tokens,
+    };
+  }
+
+  async createTokens(subject: string): Promise<ITokens> {
     // Cria o token JWT
     const token = sign({}, authConfig.secret_token, {
       subject: subject,
@@ -75,7 +90,7 @@ class AuthenticationServices {
     validatePasswordFormat(authenticationUserDTO.password);
 
     // Verifica a existência do user pelo seu Email
-    const userWithEmail = await this.usersRepository.findOneByEmail(
+    const userWithEmail = await this.usersRepository.findOneByEmailWithImage(
       authenticationUserDTO.email
     );
     if (!userWithEmail) {
@@ -91,20 +106,7 @@ class AuthenticationServices {
       throw new AppError("Email or Password incorrect!", 400);
     }
 
-    // Desestruturando infos a serem retornadas junto do token
-    const { email, name, cep, image } = userWithEmail;
-    const image_url = image ? image.file_path : undefined;
-    const tokens = await this.createTokens(userWithEmail.id);
-
-    return {
-      user: {
-        email,
-        name,
-        cep,
-        image_url,
-      },
-      ...tokens,
-    };
+    return await this.createResponse(userWithEmail);
   }
 
   async refreshToken(refreshToken: string): Promise<IResponse> {
@@ -122,7 +124,7 @@ class AuthenticationServices {
     }
 
     const userToken =
-      await this.usersTokensRepository.findOneByUserIdAndRefreshToken(
+      await this.usersTokensRepository.findOneByUserIdAndRefreshTokenWithUser(
         sub,
         refreshToken
       );
@@ -133,19 +135,7 @@ class AuthenticationServices {
 
     await this.usersTokensRepository.delete(userToken.id);
 
-    const { email, name, cep, image } = userToken.user;
-    const image_url = image ? image.file_path : undefined;
-    const tokens = await this.createTokens(userToken.user.id);
-
-    return {
-      user: {
-        email,
-        name,
-        cep,
-        image_url,
-      },
-      ...tokens,
-    };
+    return await this.createResponse(userToken.user);
   }
 }
 

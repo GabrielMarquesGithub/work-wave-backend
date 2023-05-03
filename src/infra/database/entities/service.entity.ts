@@ -4,12 +4,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryColumn,
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 
 import { User } from "./user.entity";
 import { Category } from "./category.entity";
+import { Image } from "./image.entity";
 
 @Entity("services")
 class Service {
@@ -35,12 +37,18 @@ class Service {
   created_at!: Date;
 
   //relationship with other classes
+  @Column()
+  image_id?: string;
 
   @Column()
   user_id!: string;
 
   @Column()
   category_id?: string;
+
+  @OneToOne(() => Image)
+  @JoinColumn({ name: "image_id" })
+  image?: Image;
 
   @ManyToOne(() => User, (user) => user.services)
   @JoinColumn({ name: "user_id" })

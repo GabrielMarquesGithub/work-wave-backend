@@ -10,6 +10,8 @@ servicesRoutes.use(ensureAuthentication);
 
 servicesRoutes.post("/", servicesControllers.create);
 
+servicesRoutes.put("/", servicesControllers.update);
+
 servicesRoutes.delete("/", servicesControllers.delete);
 
 export { servicesRoutes };

@@ -28,6 +28,11 @@ export class CreateTableUsers1682782475025 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "phone",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
             name: "password",
             type: "varchar",
             isNullable: false,

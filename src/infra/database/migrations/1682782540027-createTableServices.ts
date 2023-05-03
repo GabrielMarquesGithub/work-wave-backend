@@ -39,11 +39,6 @@ export class CreateTableServices1682782540027 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: "image_url",
-            type: "varchar",
-            isNullable: false,
-          },
-          {
             name: "order",
             type: "integer",
             default: 0,
@@ -52,6 +47,11 @@ export class CreateTableServices1682782540027 implements MigrationInterface {
             name: "created_at",
             type: "timestamp",
             default: "now()",
+          },
+          {
+            name: "image_id",
+            type: "uuid",
+            isNullable: true,
           },
           {
             name: "category_id",
@@ -64,6 +64,16 @@ export class CreateTableServices1682782540027 implements MigrationInterface {
             isNullable: false,
           },
         ],
+      })
+    );
+
+    await queryRunner.createForeignKey(
+      "services",
+      new TableForeignKey({
+        columnNames: ["image_id"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "images",
+        onDelete: "SET NULL",
       })
     );
 

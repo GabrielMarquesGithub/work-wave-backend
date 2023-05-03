@@ -1,8 +1,7 @@
 import { IServicesRepository } from "../interfaces/servicesRepository.interface";
-import { IServiceDTO } from "../dtos/service.dto";
+import { ICreateServiceDTO, IUpdateServiceDTO } from "../dtos/service.dtos";
 
 import { AppError } from "../errors/app.error";
-import { Service } from "../../infra/database/entities/service.entity";
 
 class ServicesServices {
   private servicesRepository: IServicesRepository;
@@ -11,8 +10,18 @@ class ServicesServices {
     this.servicesRepository = servicesRepository;
   }
 
-  async create(serviceDTO: IServiceDTO): Promise<void> {
+  async create(serviceDTO: ICreateServiceDTO): Promise<void> {
     await this.servicesRepository.create(serviceDTO);
+  }
+
+  async update(serviceDTO: IUpdateServiceDTO): Promise<void> {
+    const service = await this.servicesRepository.findOneById(serviceDTO.id);
+
+    if (!service) {
+      throw new AppError("Service does not exist", 404);
+    }
+
+    await this.servicesRepository.update(service, serviceDTO);
   }
 
   async delete(id: string): Promise<void> {

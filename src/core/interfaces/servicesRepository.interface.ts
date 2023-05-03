@@ -1,9 +1,10 @@
-import { IServiceDTO } from "../dtos/service.dto";
+import { ICreateServiceDTO, IUpdateServiceDTO } from "../dtos/service.dtos";
 
 import { Service } from "../../infra/database/entities/service.entity";
 
 export interface IServicesRepository {
   findOneById(id: string): Promise<Service | undefined>;
-  create({}: IServiceDTO): Promise<void>;
+  create({}: ICreateServiceDTO): Promise<void>;
+  update(service: Service, serviceDTO: IUpdateServiceDTO): Promise<void>;
   delete(id: string): Promise<void>;
 }

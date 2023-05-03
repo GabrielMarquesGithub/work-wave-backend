@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 
 import { IUsersRepository } from "../../../core/interfaces/usersRepository.interface";
-import { IUserDTO } from "../../../core/dtos/user.dto";
+import { ICreateUserDTO, IUpdateUserDTO } from "../../../core/dtos/user.dtos";
 
 import { appDataSource } from "..";
 
@@ -15,6 +15,16 @@ class UsersRepository implements IUsersRepository {
   }
 
   async findOneById(id: string): Promise<User | undefined> {
+    const user = await this.repository.findOneBy({ id });
+    return user !== null ? user : undefined;
+  }
+
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    const user = await this.repository.findOneBy({ email });
+    return user !== null ? user : undefined;
+  }
+
+  async findOneByIdWithImage(id: string): Promise<User | undefined> {
     const user = await this.repository.findOne({
       where: { id },
       relations: { image: true },
@@ -22,7 +32,7 @@ class UsersRepository implements IUsersRepository {
     return user !== null ? user : undefined;
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
+  async findOneByEmailWithImage(email: string): Promise<User | undefined> {
     const user = await this.repository.findOne({
       where: { email },
       relations: { image: true },
@@ -30,8 +40,13 @@ class UsersRepository implements IUsersRepository {
     return user !== null ? user : undefined;
   }
 
-  async create(userDTO: IUserDTO): Promise<void> {
+  async create(userDTO: ICreateUserDTO): Promise<void> {
     const user = this.repository.create(userDTO);
+    await this.repository.save(user);
+  }
+
+  async update(user: User, userDTO: IUpdateUserDTO): Promise<void> {
+    this.repository.merge(user, userDTO);
     await this.repository.save(user);
   }
 

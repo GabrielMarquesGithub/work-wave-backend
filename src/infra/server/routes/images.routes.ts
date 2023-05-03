@@ -12,8 +12,10 @@ const imagesRoutes = Router();
 // Criação do middleware de imagem
 const imageUpload = multer(multerImageUploadConfig({ folder: "/tmp" }));
 
+imagesRoutes.use(ensureAuthentication);
+
 imagesRoutes.post("/", imageUpload.single("image"), imagesControllers.create);
 
-imagesRoutes.delete("/", ensureAuthentication, imagesControllers.delete);
+imagesRoutes.delete("/", imagesControllers.delete);
 
 export { imagesRoutes };

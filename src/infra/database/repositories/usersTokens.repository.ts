@@ -14,13 +14,14 @@ class UsersTokensRepository implements IUsersTokensRepository {
     this.repository = appDataSource.getRepository(UserToken);
   }
 
-  async findOneByUserIdAndRefreshToken(
+  async findOneByUserIdAndRefreshTokenWithUser(
     userId: string,
     refreshToken: string
   ): Promise<UserToken | undefined> {
     const userToken = await this.repository.findOne({
       where: { user_id: userId, refresh_token: refreshToken },
-      relations: { user: true },
+      //Dessa maneira podemos retornar relacionamentos de entidades relacionadas
+      relations: { user: { image: true } },
     });
     return userToken !== null ? userToken : undefined;
   }

@@ -2,7 +2,7 @@ import { UserToken } from "../../infra/database/entities/userToken.entity";
 import { IUserTokenDTO } from "../dtos/userToken.dto";
 
 export interface IUsersTokensRepository {
-  findOneByUserIdAndRefreshToken(
+  findOneByUserIdAndRefreshTokenWithUser(
     userId: string,
     refreshToken: string
   ): Promise<UserToken | undefined>;

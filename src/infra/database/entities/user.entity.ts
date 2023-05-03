@@ -26,6 +26,9 @@ class User {
   email!: string;
 
   @Column()
+  phone!: string;
+
+  @Column()
   password!: string;
 
   @Column()
