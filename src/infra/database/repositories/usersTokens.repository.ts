@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 
-import { IUserTokenDTO } from "../../../core/dtos/userToken.dto";
+import { ICreateUserTokenDTO } from "../../../core/dtos/userToken.dtos";
 import { IUsersTokensRepository } from "../../../core/interfaces/usersTokensRepository.interface";
 
 import { appDataSource } from "..";
@@ -26,7 +26,7 @@ class UsersTokensRepository implements IUsersTokensRepository {
     return userToken !== null ? userToken : undefined;
   }
 
-  async create({ ...userTokenDTO }: IUserTokenDTO): Promise<UserToken> {
+  async create({ ...userTokenDTO }: ICreateUserTokenDTO): Promise<UserToken> {
     const userToken = this.repository.create(userTokenDTO);
     return await this.repository.save(userToken);
   }

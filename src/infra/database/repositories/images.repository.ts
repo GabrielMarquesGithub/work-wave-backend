@@ -1,11 +1,11 @@
 import { Repository } from "typeorm";
 
-import { IImageDTO } from "../../../core/dtos/image.dto";
+import { ICreateImageDTO } from "../../../core/dtos/image.dtos";
 import { IImagesRepository } from "../../../core/interfaces/imagesRepository.interface";
 
 import { appDataSource } from "..";
 
-import { Image } from "../entities/image.entity";
+import { Image } from "../entities/serviceImage.entity";
 
 class ImagesRepository implements IImagesRepository {
   private repository: Repository<Image>;
@@ -18,7 +18,7 @@ class ImagesRepository implements IImagesRepository {
     return image !== null ? image : undefined;
   }
 
-  async create(imageDTO: IImageDTO): Promise<Image> {
+  async create(imageDTO: ICreateImageDTO): Promise<Image> {
     const user = this.repository.create(imageDTO);
     return await this.repository.save(user);
   }

@@ -1,5 +1,5 @@
 import { UserToken } from "../../infra/database/entities/userToken.entity";
-import { IUserTokenDTO } from "../dtos/userToken.dto";
+import { IUserTokenDTO } from "../dtos/userToken.dtos";
 
 export interface IUsersTokensRepository {
   findOneByUserIdAndRefreshTokenWithUser(

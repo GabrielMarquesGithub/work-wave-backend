@@ -1,8 +1,8 @@
 import { IImagesRepository } from "../interfaces/imagesRepository.interface";
-import { IImageDTO } from "../dtos/image.dto";
+import { ICreateImageDTO } from "../dtos/image.dtos";
 
 import { AppError } from "../errors/app.error";
-import { Image } from "../../infra/database/entities/image.entity";
+import { Image } from "../../infra/database/entities/serviceImage.entity";
 
 class ImagesServices {
   private imagesRepository: IImagesRepository;
@@ -11,7 +11,7 @@ class ImagesServices {
     this.imagesRepository = imagesRepository;
   }
 
-  async create(imageDTO: IImageDTO): Promise<Image> {
+  async create(imageDTO: ICreateImageDTO): Promise<Image> {
     return await this.imagesRepository.create(imageDTO);
   }
 

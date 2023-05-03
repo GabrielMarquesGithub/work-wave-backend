@@ -1,4 +1,4 @@
-import { ICategoryDTO } from "../dtos/category.dto";
+import { ICategoryDTO } from "../dtos/category.dtos";
 
 import { Category } from "../../infra/database/entities/category.entity";
 

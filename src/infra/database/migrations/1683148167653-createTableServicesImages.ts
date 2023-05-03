@@ -5,11 +5,13 @@ import {
   TableForeignKey,
 } from "typeorm";
 
-export class CreateTableUsers1682782475025 implements MigrationInterface {
+export class CreateTableServicesImages1683148167653
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "users",
+        name: "services_images",
         columns: [
           {
             name: "id",
@@ -17,47 +19,52 @@ export class CreateTableUsers1682782475025 implements MigrationInterface {
             isPrimary: true,
           },
           {
+            name: "url",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
             name: "name",
             type: "varchar",
             isNullable: false,
           },
           {
-            name: "email",
-            type: "varchar",
-            isUnique: true,
+            name: "file_size",
+            type: "int",
             isNullable: false,
           },
           {
-            name: "phone",
+            name: "format",
             type: "varchar",
             isNullable: false,
-          },
-          {
-            name: "password",
-            type: "varchar",
-            isNullable: false,
-          },
-          {
-            name: "cep",
-            type: "varchar",
-            isNullable: false,
-          },
-          {
-            name: "avatar_url",
-            type: "varchar",
-            isNullable: true,
           },
           {
             name: "created_at",
             type: "timestamp",
             default: "now()",
           },
+          {
+            name: "service_id",
+            type: "uuid",
+            isNullable: false,
+          },
         ],
+      })
+    );
+
+    await queryRunner.createForeignKey(
+      "services_images",
+      new TableForeignKey({
+        columnNames: ["service_id"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "services",
+        onDelete: "CASCADE",
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("users");
+    await queryRunner.dropForeignKey("services_images", "service_id");
+    await queryRunner.dropTable("services_images");
   }
 }

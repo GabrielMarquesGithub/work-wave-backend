@@ -1,4 +1,4 @@
-import { Image } from "../../infra/database/entities/image.entity";
+import { Image } from "../../infra/database/entities/serviceImage.entity";
 
 //DTO ou VO
 interface IUserDTO {
@@ -20,4 +20,9 @@ export interface IUpdateUserDTO extends IUserDTO {
 export interface IResponseUserDTO extends IUserDTO {
   id: string;
   image?: Image;
+}
+
+export interface IAuthenticationUserDTO {
+  email: string;
+  password: string;
 }

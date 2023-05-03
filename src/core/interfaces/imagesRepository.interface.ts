@@ -1,9 +1,9 @@
-import { IImageDTO } from "../dtos/image.dto";
+import { ICreateImageDTO } from "../dtos/image.dtos";
 
-import { Image } from "../../infra/database/entities/image.entity";
+import { Image } from "../../infra/database/entities/serviceImage.entity";
 
 export interface IImagesRepository {
   findOneById(id: string): Promise<Image | undefined>;
-  create({}: IImageDTO): Promise<Image>;
+  create({}: ICreateImageDTO): Promise<Image>;
   delete(id: string): Promise<void>;
 }

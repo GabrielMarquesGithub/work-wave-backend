@@ -5,8 +5,7 @@ import { AppError } from "../errors/app.error";
 
 import { IUsersRepository } from "../interfaces/usersRepository.interface";
 import { IUsersTokensRepository } from "../interfaces/usersTokensRepository.interface";
-import { IResponseUserDTO } from "../dtos/user.dtos";
-import { IAuthenticationUserDTO } from "../dtos/authenticationUser.dto";
+import { IAuthenticationUserDTO, IResponseUserDTO } from "../dtos/user.dtos";
 import { IDateProvider } from "../interfaces/dateProvider.interface";
 
 import { validateEmailFormat } from "../utils/validation/validateEmailFormat";

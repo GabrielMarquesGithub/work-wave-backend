@@ -11,7 +11,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { User } from "./user.entity";
 import { Category } from "./category.entity";
-import { Image } from "./image.entity";
+import { Image } from "./serviceImage.entity";
 
 @Entity("services")
 class Service {
@@ -38,17 +38,10 @@ class Service {
 
   //relationship with other classes
   @Column()
-  image_id?: string;
-
-  @Column()
   user_id!: string;
 
   @Column()
   category_id?: string;
-
-  @OneToOne(() => Image)
-  @JoinColumn({ name: "image_id" })
-  image?: Image;
 
   @ManyToOne(() => User, (user) => user.services)
   @JoinColumn({ name: "user_id" })

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { ICategoryDTO } from "../../../core/dtos/category.dto";
+import { ICategoryDTO } from "../../../core/dtos/category.dtos";
 
 import { CategoriesRepository } from "../../database/repositories/categories.repository";
 import { CategoriesServices } from "../../../core/services/categories.services";

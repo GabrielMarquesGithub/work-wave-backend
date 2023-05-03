@@ -2,15 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryColumn,
 } from "typeorm";
 import { v4 as uuidV4 } from "uuid";
 
 import { Service } from "./service.entity";
-import { Image } from "./image.entity";
 
 // Usar o operador "!" para indicar que no database esse propriedade é obrigatória
 
@@ -34,16 +31,13 @@ class User {
   @Column()
   cep!: string;
 
+  @Column()
+  avatar_id?: string;
+
   @CreateDateColumn()
   created_at!: Date;
 
   //relationship with other classes
-  @Column()
-  image_id?: string;
-
-  @OneToOne(() => Image)
-  @JoinColumn({ name: "image_id" })
-  image?: Image;
 
   @OneToMany(() => Service, (service) => service.user)
   services?: Service[];
