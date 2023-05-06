@@ -1,3 +1,4 @@
+import "dotenv/config";
 import multer, { Options } from "multer";
 import { Request } from "express";
 import { extname, join } from "path";
@@ -5,14 +6,13 @@ import { v4 as uuidv4 } from "uuid";
 
 import { AppError } from "../../core/errors/app.error";
 
-interface IMulterConfig {
-  folder: string;
-}
+const appUrl = process.env.APP_URL;
 
-const multerImageUploadConfig = ({ folder }: IMulterConfig): Options => {
+const tmpFilePath = join(__dirname, "..", "..", "..", "/tmp");
+
+const createMulterConfig = (): Options => {
   // Para obtenção do diretório correto
-  const destination = join(__dirname, "..", "..", "..", folder);
-
+  const destination = tmpFilePath;
   // Para garantia da existência do diretório
   // if (!existsSync(destination)) {
   //   mkdirSync(destination, { recursive: true });
@@ -57,4 +57,6 @@ const multerImageUploadConfig = ({ folder }: IMulterConfig): Options => {
   };
 };
 
-export { multerImageUploadConfig };
+const multerConfig = createMulterConfig();
+
+export { multerConfig, tmpFilePath, appUrl };

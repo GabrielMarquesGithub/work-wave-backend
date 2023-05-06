@@ -1,22 +1,28 @@
 import { hash } from "bcryptjs";
 
-import { IUsersRepository } from "../interfaces/usersRepository.interface";
-import { ICreateUserDTO, IUpdateUserDTO } from "../dtos/user.dtos";
+import { IUsersRepository } from "../../core/interfaces/usersRepository.interface";
+import { ICreateUserDTO, IUpdateUserDTO } from "../../core/dtos/user.dtos";
 
-import { AppError } from "../errors/app.error";
+import { AppError } from "../../core/errors/app.error";
 
-import { validateEmailFormat } from "../utils/validation/validateEmailFormat";
-import { validatePasswordFormat } from "../utils/validation/validatePasswordFormat";
-import { validateCEPFormat } from "../utils/validation/validateCEPFormat";
-import { validatePhoneFormat } from "../utils/validation/validatePhoneFormat";
-import { formatCEP } from "../utils/formatting/formatCEP";
-import { formatPhone } from "../utils/formatting/formatPhone";
+import { validateEmailFormat } from "../../core/utils/validation/validateEmailFormat";
+import { validatePasswordFormat } from "../../core/utils/validation/validatePasswordFormat";
+import { validateCEPFormat } from "../../core/utils/validation/validateCEPFormat";
+import { validatePhoneFormat } from "../../core/utils/validation/validatePhoneFormat";
+import { formatCEP } from "../../core/utils/formatting/formatCEP";
+import { formatPhone } from "../../core/utils/formatting/formatPhone";
+import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 
 class UsersServices {
   private usersRepository: IUsersRepository;
+  private storageProvider: IStorageProvider;
 
-  constructor(usersRepository: IUsersRepository) {
+  constructor(
+    usersRepository: IUsersRepository,
+    storageProvider: IStorageProvider
+  ) {
     this.usersRepository = usersRepository;
+    this.storageProvider = storageProvider;
   }
 
   async create(userDTO: ICreateUserDTO): Promise<void> {
@@ -80,6 +86,26 @@ class UsersServices {
     }
 
     await this.usersRepository.delete(id);
+  }
+
+  async createAvatar(id: string, file: string): Promise<void> {
+    const user = await this.usersRepository.findOneById(id);
+
+    if (!user) {
+      throw new AppError("User does not exist", 404);
+    }
+
+    if (!file) {
+      throw new AppError("Image does not exist", 404);
+    }
+
+    if (user.avatar_url) {
+      this.storageProvider.delete(user.avatar_url, "avatar");
+    }
+
+    await this.storageProvider.save(file, "avatar");
+
+    await this.usersRepository.update(user, { ...user, avatar_url: file });
   }
 }
 

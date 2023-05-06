@@ -1,18 +1,22 @@
 import { sign, verify } from "jsonwebtoken";
 import { compare } from "bcryptjs";
 
-import { AppError } from "../errors/app.error";
+import { AppError } from "../../core/errors/app.error";
 
-import { IUsersRepository } from "../interfaces/usersRepository.interface";
-import { IUsersTokensRepository } from "../interfaces/usersTokensRepository.interface";
-import { IAuthenticationUserDTO, IResponseUserDTO } from "../dtos/user.dtos";
-import { IDateProvider } from "../interfaces/dateProvider.interface";
+import { IUsersRepository } from "../../core/interfaces/usersRepository.interface";
+import { IUsersTokensRepository } from "../../core/interfaces/usersTokensRepository.interface";
+import {
+  IAuthenticationUserDTO,
+  IResponseUserDTO,
+} from "../../core/dtos/user.dtos";
+import { IDateProvider } from "../../core/interfaces/dateProvider.interface";
 
-import { validateEmailFormat } from "../utils/validation/validateEmailFormat";
-import { validatePasswordFormat } from "../utils/validation/validatePasswordFormat";
+import { validateEmailFormat } from "../../core/utils/validation/validateEmailFormat";
+import { validatePasswordFormat } from "../../core/utils/validation/validatePasswordFormat";
 
-import { authConfig } from "../../infra/configs/auth.config";
-import { User } from "../../infra/database/entities/user.entity";
+import { authConfig } from "../configs/auth.config";
+import { User } from "../database/entities/user.entity";
+import { UserMapper } from "../server/mappers/user.mapper";
 
 interface ITokens {
   token: string;
@@ -40,7 +44,7 @@ class AuthenticationServices {
 
   async createResponse(user: User): Promise<IResponse> {
     // Desestruturando infos a serem retornadas junto do token
-    const { password, ...responseUser } = user;
+    const responseUser = UserMapper.toDTO(user);
     const tokens = await this.createTokens(user.id);
 
     return {

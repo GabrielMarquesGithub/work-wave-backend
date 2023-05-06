@@ -1,4 +1,4 @@
-import { ICategoryDTO } from "../dtos/category.dtos";
+import { ICreateCategoryDTO, IUpdateCategoryDTO } from "../dtos/category.dtos";
 
 import { Category } from "../../infra/database/entities/category.entity";
 
@@ -6,6 +6,7 @@ export interface ICategoriesRepository {
   findOneById(id: string): Promise<Category | undefined>;
   findOneByName(name: string): Promise<Category | undefined>;
   findAll(): Promise<Category[] | undefined>;
-  create({}: ICategoryDTO): Promise<void>;
+  create({}: ICreateCategoryDTO): Promise<void>;
+  update(category: Category, categoryDTO: IUpdateCategoryDTO): Promise<void>;
   delete(id: string): Promise<void>;
 }

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { UsersRepository } from "../../database/repositories/users.repository";
 import { UsersTokensRepository } from "../../database/repositories/usersTokens.repository";
-import { AuthenticationServices } from "../../../core/services/authentication.services";
+import { AuthenticationServices } from "../../services/authentication.services";
 import { IAuthenticationUserDTO } from "../../../core/dtos/user.dtos";
 import { DateProvide } from "../../providers/date.provider";
 

@@ -3,10 +3,12 @@ import { Request, Response } from "express";
 import { ICreateUserDTO, IUpdateUserDTO } from "../../../core/dtos/user.dtos";
 
 import { UsersRepository } from "../../database/repositories/users.repository";
-import { UsersServices } from "../../../core/services/users.services";
+import { UsersServices } from "../../services/users.services";
+import { LocalStorageProvider } from "../../providers/localStorage.provider";
 
 const usersRepository = new UsersRepository();
-const usersServices = new UsersServices(usersRepository);
+const storageProvider = new LocalStorageProvider();
+const usersServices = new UsersServices(usersRepository, storageProvider);
 
 interface IUpdateRequestBody extends IUpdateUserDTO {
   password?: string;
@@ -34,6 +36,15 @@ class UsersControllers {
     const { id } = req.body;
 
     await usersServices.delete(id);
+
+    return res.status(204).send();
+  }
+
+  async createAvatar(req: Request, res: Response): Promise<Response> {
+    const { id } = req.user;
+    const { filename } = req.file as Express.Multer.File;
+
+    await usersServices.createAvatar(id, filename);
 
     return res.status(204).send();
   }

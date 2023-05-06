@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from "typeorm";
@@ -11,7 +12,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { User } from "./user.entity";
 import { Category } from "./category.entity";
-import { Image } from "./serviceImage.entity";
+import { ServiceImage } from "./serviceImage.entity";
 
 @Entity("services")
 class Service {
@@ -50,6 +51,9 @@ class Service {
   @ManyToOne(() => Category, (category) => category.services)
   @JoinColumn({ name: "category_id" })
   category?: User;
+
+  @OneToMany(() => ServiceImage, (serviceImage) => serviceImage.service)
+  images?: ServiceImage[];
 
   constructor() {
     if (!this.id) {

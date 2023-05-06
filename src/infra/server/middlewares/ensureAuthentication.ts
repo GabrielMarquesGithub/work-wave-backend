@@ -42,6 +42,9 @@ async function ensureAuthentication(
     throw new AppError("User does not exist", 400);
   }
 
+  //Para usar em algumas validações
+  req.user = { id: user.id };
+
   next();
 }
 

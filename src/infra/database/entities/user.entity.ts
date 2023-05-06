@@ -32,7 +32,7 @@ class User {
   cep!: string;
 
   @Column()
-  avatar_id?: string;
+  avatar_url?: string;
 
   @CreateDateColumn()
   created_at!: Date;

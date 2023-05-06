@@ -1,7 +1,10 @@
 import { Repository } from "typeorm";
 
 import { ICategoriesRepository } from "../../../core/interfaces/categoriesRepository.interface";
-import { ICategoryDTO } from "../../../core/dtos/category.dtos";
+import {
+  ICreateCategoryDTO,
+  IUpdateCategoryDTO,
+} from "../../../core/dtos/category.dtos";
 
 import { appDataSource } from "..";
 
@@ -28,8 +31,17 @@ class CategoriesRepository implements ICategoriesRepository {
     return await this.repository.find();
   }
 
-  async create(categoryDTO: ICategoryDTO): Promise<void> {
+  async create(categoryDTO: ICreateCategoryDTO): Promise<void> {
     const category = this.repository.create(categoryDTO);
+    await this.repository.save(category);
+  }
+
+  async update(
+    category: Category,
+    categoryDTO: IUpdateCategoryDTO
+  ): Promise<void> {
+    this.repository.merge(category, categoryDTO);
+
     await this.repository.save(category);
   }
 

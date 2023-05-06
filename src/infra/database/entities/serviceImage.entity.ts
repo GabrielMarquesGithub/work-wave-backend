@@ -1,8 +1,16 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { v4 as uuidV4 } from "uuid";
+import { Service } from "./service.entity";
 
 @Entity("services_images")
-class Image {
+class ServiceImage {
   @PrimaryColumn()
   id!: string;
 
@@ -25,6 +33,10 @@ class Image {
   @Column()
   service_id!: string;
 
+  @ManyToOne(() => Service, (service) => service.images)
+  @JoinColumn({ name: "service_id" })
+  service!: Service;
+
   constructor() {
     if (!this.id) {
       this.id = uuidV4();
@@ -32,4 +44,4 @@ class Image {
   }
 }
 
-export { Image };
+export { ServiceImage };

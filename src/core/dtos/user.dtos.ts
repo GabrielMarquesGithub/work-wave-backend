@@ -1,12 +1,9 @@
-import { Image } from "../../infra/database/entities/serviceImage.entity";
-
 //DTO ou VO
 interface IUserDTO {
   name: string;
   email: string;
   phone: string;
   cep: string;
-  image_id?: string;
 }
 
 export interface ICreateUserDTO extends IUserDTO {
@@ -15,11 +12,12 @@ export interface ICreateUserDTO extends IUserDTO {
 
 export interface IUpdateUserDTO extends IUserDTO {
   id: string;
+  avatar_url?: string;
 }
 
 export interface IResponseUserDTO extends IUserDTO {
   id: string;
-  image?: Image;
+  avatar_url?: string;
 }
 
 export interface IAuthenticationUserDTO {
