@@ -43,6 +43,11 @@ export class CreateTableUsers1682782475025 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "avatar",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
             name: "avatar_url",
             type: "varchar",
             isNullable: true,

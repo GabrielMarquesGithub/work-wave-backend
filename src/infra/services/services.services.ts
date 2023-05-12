@@ -9,6 +9,7 @@ import {
 import { AppError } from "../../core/errors/app.error";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 import { appUrl } from "../configs/upload";
+import { Service } from "../database/entities/service.entity";
 
 class ServicesServices {
   private servicesRepository: IServicesRepository;
@@ -25,36 +26,38 @@ class ServicesServices {
     this.storageProvider = storageProvider;
   }
 
+  async checkIfServiceExists(id: string): Promise<Service> {
+    const service = await this.servicesRepository.findOneById(id);
+
+    if (!service) {
+      throw new AppError("Service does not exist", 404);
+    }
+
+    return service;
+  }
+
+  async findByUserId(id: string): Promise<Service[]> {
+    return (await this.servicesRepository.findByUserId(id)) ?? [];
+  }
+
   async create(serviceDTO: ICreateServiceDTO): Promise<void> {
     await this.servicesRepository.create(serviceDTO);
   }
 
   async update(serviceDTO: IUpdateServiceDTO): Promise<void> {
-    const service = await this.servicesRepository.findOneById(serviceDTO.id);
-
-    if (!service) {
-      throw new AppError("Service does not exist", 404);
-    }
+    const service = await this.checkIfServiceExists(serviceDTO.id);
 
     await this.servicesRepository.update(service, serviceDTO);
   }
 
   async delete(id: string): Promise<void> {
-    const service = await this.servicesRepository.findOneById(id);
-
-    if (!service) {
-      throw new AppError("Service does not exist", 404);
-    }
+    await this.checkIfServiceExists(id);
 
     await this.servicesRepository.delete(id);
   }
 
   async createImages(id: string, files: Express.Multer.File[]): Promise<void> {
-    const service = await this.servicesRepository.findOneById(id);
-
-    if (!service) {
-      throw new AppError("Service does not exist", 404);
-    }
+    await this.checkIfServiceExists(id);
 
     if (!files || files.length === 0) {
       throw new AppError("Image does not exist", 404);
@@ -81,6 +84,8 @@ class ServicesServices {
     if (!image) {
       throw new AppError("Image does not exist", 404);
     }
+
+    this.storageProvider.delete(image.name, "service");
 
     await this.servicesImagesRepository.delete(id);
   }

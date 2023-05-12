@@ -22,6 +22,15 @@ class CategoriesRepository implements ICategoriesRepository {
     return category !== null ? category : undefined;
   }
 
+  async findOneByIdWithServicesAndImagesServices(
+    id: string,
+    skip: number,
+    limit: number
+  ): Promise<Category | undefined> {
+    await this.repository.find({ select: { created_at: true } });
+    throw new Error("Method not implemented.");
+  }
+
   async findOneByName(name: string): Promise<Category | undefined> {
     const category = await this.repository.findOneBy({ name });
     return category !== null ? category : undefined;

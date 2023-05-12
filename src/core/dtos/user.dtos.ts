@@ -12,7 +12,8 @@ export interface ICreateUserDTO extends IUserDTO {
 
 export interface IUpdateUserDTO extends IUserDTO {
   id: string;
-  avatar_url?: string;
+  avatar?: string | null;
+  avatar_url?: string | null;
 }
 
 export interface IResponseUserDTO extends IUserDTO {

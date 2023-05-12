@@ -93,7 +93,7 @@ class AuthenticationServices {
     validatePasswordFormat(authenticationUserDTO.password);
 
     // Verifica a existência do user pelo seu Email
-    const userWithEmail = await this.usersRepository.findOneByEmailWithImage(
+    const userWithEmail = await this.usersRepository.findOneByEmail(
       authenticationUserDTO.email
     );
     if (!userWithEmail) {

@@ -28,6 +28,11 @@ export class CreateTableCategories1682782461093 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: "icon",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
             name: "icon_url",
             type: "varchar",
             isNullable: true,

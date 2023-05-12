@@ -21,6 +21,14 @@ const servicesServices = new ServicesServices(
 );
 
 class ServicesControllers {
+  async findByUserId(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const services = await servicesServices.findByUserId(id);
+
+    return res.json(services);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     const serviceDTO = req.body as ICreateServiceDTO;
 
@@ -38,7 +46,7 @@ class ServicesControllers {
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.body;
+    const { id } = req.params;
 
     await servicesServices.delete(id);
 
@@ -55,7 +63,7 @@ class ServicesControllers {
   }
 
   async deleteImage(req: Request, res: Response): Promise<Response> {
-    const { id } = req.body;
+    const { id } = req.params;
 
     await servicesServices.deleteImage(id);
 

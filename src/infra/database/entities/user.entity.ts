@@ -31,8 +31,11 @@ class User {
   @Column()
   cep!: string;
 
-  @Column()
-  avatar_url?: string;
+  @Column({ type: "varchar", nullable: true })
+  avatar?: string | null;
+
+  @Column({ type: "varchar", nullable: true })
+  avatar_url?: string | null;
 
   @CreateDateColumn()
   created_at!: Date;

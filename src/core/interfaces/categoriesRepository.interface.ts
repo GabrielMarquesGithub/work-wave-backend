@@ -4,6 +4,11 @@ import { Category } from "../../infra/database/entities/category.entity";
 
 export interface ICategoriesRepository {
   findOneById(id: string): Promise<Category | undefined>;
+  findOneByIdWithServicesAndImagesServices(
+    id: string,
+    skip: number,
+    limit: number
+  ): Promise<Category | undefined>;
   findOneByName(name: string): Promise<Category | undefined>;
   findAll(): Promise<Category[] | undefined>;
   create({}: ICreateCategoryDTO): Promise<void>;

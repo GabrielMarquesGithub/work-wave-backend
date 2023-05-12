@@ -22,9 +22,16 @@ class ServicesRepository implements IServicesRepository {
     return service !== null ? service : undefined;
   }
 
+  async findByUserId(id: string): Promise<Service[] | undefined> {
+    return await this.repository.find({
+      where: { user_id: id },
+      relations: { images: true },
+    });
+  }
+
   async create(serviceDTO: ICreateServiceDTO): Promise<void> {
-    const user = this.repository.create(serviceDTO);
-    await this.repository.save(user);
+    const service = this.repository.create(serviceDTO);
+    await this.repository.save(service);
   }
 
   async update(service: Service, serviceDTO: IUpdateServiceDTO): Promise<void> {

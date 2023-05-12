@@ -13,11 +13,13 @@ const imageUpload = multer(multerConfig);
 
 servicesRoutes.use(ensureAuthentication);
 
+servicesRoutes.get("/user/:id", servicesControllers.findByUserId);
+
 servicesRoutes.post("/", servicesControllers.create);
 
 servicesRoutes.put("/", servicesControllers.update);
 
-servicesRoutes.delete("/", servicesControllers.delete);
+servicesRoutes.delete("/:id", servicesControllers.delete);
 
 servicesRoutes.put(
   "/images/:id",
@@ -25,6 +27,6 @@ servicesRoutes.put(
   servicesControllers.createImages
 );
 
-servicesRoutes.delete("/images", servicesControllers.deleteImage);
+servicesRoutes.delete("/images/:id", servicesControllers.deleteImage);
 
 export { servicesRoutes };

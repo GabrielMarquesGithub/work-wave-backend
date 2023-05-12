@@ -24,16 +24,6 @@ class UsersRepository implements IUsersRepository {
     return user !== null ? user : undefined;
   }
 
-  async findOneByIdWithImage(id: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ id });
-    return user !== null ? user : undefined;
-  }
-
-  async findOneByEmailWithImage(email: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ email });
-    return user !== null ? user : undefined;
-  }
-
   async create(userDTO: ICreateUserDTO): Promise<void> {
     const user = this.repository.create(userDTO);
     await this.repository.save(user);
@@ -42,7 +32,7 @@ class UsersRepository implements IUsersRepository {
   async update(user: User, userDTO: IUpdateUserDTO): Promise<void> {
     this.repository.merge(user, userDTO);
 
-    await this.repository.save(user);
+    await this.repository.save({ ...user });
   }
 
   async delete(id: string): Promise<void> {

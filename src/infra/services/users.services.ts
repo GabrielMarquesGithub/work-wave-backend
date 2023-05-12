@@ -12,6 +12,8 @@ import { validatePhoneFormat } from "../../core/utils/validation/validatePhoneFo
 import { formatCEP } from "../../core/utils/formatting/formatCEP";
 import { formatPhone } from "../../core/utils/formatting/formatPhone";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
+import { User } from "../database/entities/user.entity";
+import { appUrl } from "../configs/upload";
 
 class UsersServices {
   private usersRepository: IUsersRepository;
@@ -23,6 +25,16 @@ class UsersServices {
   ) {
     this.usersRepository = usersRepository;
     this.storageProvider = storageProvider;
+  }
+
+  async checkIfUserExists(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneById(id);
+
+    if (!user) {
+      throw new AppError("User does not exist", 404);
+    }
+
+    return user;
   }
 
   async create(userDTO: ICreateUserDTO): Promise<void> {
@@ -56,11 +68,7 @@ class UsersServices {
     userDTO.cep = formatCEP(userDTO.cep);
     userDTO.phone = formatPhone(userDTO.phone);
 
-    const user = await this.usersRepository.findOneById(userDTO.id);
-
-    if (!user) {
-      throw new AppError("User does not exist", 404);
-    }
+    const user = await this.checkIfUserExists(userDTO.id);
 
     if (user.email !== userDTO.email) {
       const userWithEmail = await this.usersRepository.findOneByEmail(
@@ -79,33 +87,47 @@ class UsersServices {
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.usersRepository.findOneById(id);
-
-    if (!user) {
-      throw new AppError("User does not exist", 404);
-    }
+    await this.checkIfUserExists(id);
 
     await this.usersRepository.delete(id);
   }
 
   async createAvatar(id: string, file: string): Promise<void> {
-    const user = await this.usersRepository.findOneById(id);
-
-    if (!user) {
-      throw new AppError("User does not exist", 404);
-    }
+    const user = await this.checkIfUserExists(id);
 
     if (!file) {
       throw new AppError("Image does not exist", 404);
     }
 
-    if (user.avatar_url) {
-      this.storageProvider.delete(user.avatar_url, "avatar");
+    if (user.avatar) {
+      this.storageProvider.delete(user.avatar, "avatar");
     }
 
     await this.storageProvider.save(file, "avatar");
 
-    await this.usersRepository.update(user, { ...user, avatar_url: file });
+    const newUser: IUpdateUserDTO = {
+      ...user,
+      avatar: file,
+      avatar_url: `${appUrl}avatar/${file}`,
+    };
+
+    await this.usersRepository.update(user, newUser);
+  }
+
+  async deleteAvatar(id: string): Promise<void> {
+    const user = await this.checkIfUserExists(id);
+
+    if (!user.avatar_url || !user.avatar) {
+      throw new AppError("Image does not exist", 404);
+    }
+
+    this.storageProvider.delete(user.avatar, "avatar");
+
+    // Excluindo a URL e o caminho do arquivo
+    user.avatar = null;
+    user.avatar_url = null;
+
+    await this.usersRepository.update(user, user);
   }
 }
 

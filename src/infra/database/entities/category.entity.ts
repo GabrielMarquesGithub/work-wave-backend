@@ -20,8 +20,11 @@ class Category {
   @Column()
   description?: string;
 
-  @Column()
-  icon_url?: string;
+  @Column({ type: "varchar", nullable: true })
+  icon?: string | null;
+
+  @Column({ type: "varchar", nullable: true })
+  icon_url?: string | null;
 
   @CreateDateColumn()
   created_at!: Date;

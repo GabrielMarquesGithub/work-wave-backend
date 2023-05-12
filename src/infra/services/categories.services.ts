@@ -2,11 +2,14 @@ import { ICategoriesRepository } from "../../core/interfaces/categoriesRepositor
 import {
   ICreateCategoryDTO,
   IResponseCategoryDTO,
+  IUpdateCategoryDTO,
 } from "../../core/dtos/category.dtos";
 
 import { AppError } from "../../core/errors/app.error";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 import { CategoryMapper } from "../server/mappers/category.mapper";
+import { Category } from "../database/entities/category.entity";
+import { appUrl } from "../configs/upload";
 
 class CategoriesServices {
   private categoriesRepository: ICategoriesRepository;
@@ -20,9 +23,30 @@ class CategoriesServices {
     this.storageProvider = storageProvider;
   }
 
+  async checkIfCategoryExists(id: string): Promise<Category> {
+    const category = await this.categoriesRepository.findOneById(id);
+
+    if (!category) {
+      throw new AppError("Category does not exist", 404);
+    }
+
+    return category;
+  }
+
   async findAll(): Promise<IResponseCategoryDTO[]> {
     const categories = (await this.categoriesRepository.findAll()) ?? [];
     return categories.map((category) => CategoryMapper.toDTO(category));
+  }
+
+  //errado
+  async findById(id: string): Promise<IResponseCategoryDTO> {
+    const category = await this.categoriesRepository.findOneById(id);
+
+    if (!category) {
+      throw new AppError("Category does not exist", 404);
+    }
+
+    return CategoryMapper.toDTO(category);
   }
 
   async create(categoryDTO: ICreateCategoryDTO): Promise<void> {
@@ -38,36 +62,47 @@ class CategoriesServices {
   }
 
   async delete(id: string): Promise<void> {
-    const category = await this.categoriesRepository.findOneById(id);
-
-    if (!category) {
-      throw new AppError("Category does not exist", 404);
-    }
+    await this.checkIfCategoryExists(id);
 
     await this.categoriesRepository.delete(id);
   }
 
   async createIcon(id: string, file: string): Promise<void> {
-    const category = await this.categoriesRepository.findOneById(id);
-
-    if (!category) {
-      throw new AppError("Category does not exist", 404);
-    }
+    const category = await this.checkIfCategoryExists(id);
 
     if (!file) {
       throw new AppError("Image does not exist", 404);
     }
 
-    if (category.icon_url) {
-      this.storageProvider.delete(category.icon_url, "icon");
+    if (category.icon) {
+      this.storageProvider.delete(category.icon, "icon");
     }
 
     await this.storageProvider.save(file, "icon");
 
-    await this.categoriesRepository.update(category, {
+    const newCategory: IUpdateCategoryDTO = {
       ...category,
-      icon_url: file,
-    });
+      icon: file,
+      icon_url: `${appUrl}icon/${file}`,
+    };
+
+    await this.categoriesRepository.update(category, newCategory);
+  }
+
+  async deleteIcon(id: string): Promise<void> {
+    const category = await this.checkIfCategoryExists(id);
+
+    if (!category.icon_url || !category.icon) {
+      throw new AppError("Image does not exist", 404);
+    }
+
+    this.storageProvider.delete(category.icon, "icon");
+
+    // Excluindo a URL e o caminho do arquivo
+    category.icon = null;
+    category.icon_url = null;
+
+    await this.categoriesRepository.update(category, category);
   }
 }
 
