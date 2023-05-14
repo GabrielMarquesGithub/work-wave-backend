@@ -11,17 +11,20 @@ const categoriesControllers = new CategoriesControllers();
 
 const imageUpload = multer(multerConfig);
 
+categoriesRoutes.get("/", categoriesControllers.findAll);
+
+categoriesRoutes.get(
+  "/:id",
+  categoriesControllers.findOneByIdWithServicesAndServicesImages
+);
+
+categoriesRoutes.use(ensureAuthentication);
+
 categoriesRoutes.put(
   "/icon/:id",
   imageUpload.single("image"),
   categoriesControllers.createIcon
 );
-
-categoriesRoutes.get("/", categoriesControllers.findAll);
-
-categoriesRoutes.get("/:id", categoriesControllers.findByIdWithServices);
-
-categoriesRoutes.use(ensureAuthentication);
 
 categoriesRoutes.post("/", categoriesControllers.create);
 

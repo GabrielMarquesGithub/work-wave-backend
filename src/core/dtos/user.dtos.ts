@@ -1,24 +1,24 @@
 //DTO ou VO
-interface IUserDTO {
+interface IBaseUserDTO {
   name: string;
   email: string;
   phone: string;
   cep: string;
 }
 
-export interface ICreateUserDTO extends IUserDTO {
+export interface ICreateUserDTO extends IBaseUserDTO {
   password: string;
 }
 
-export interface IUpdateUserDTO extends IUserDTO {
+export interface IUpdateUserDTO extends IBaseUserDTO {
   id: string;
-  avatar?: string | null;
-  avatar_url?: string | null;
+  avatar: string | null;
+  avatar_url: string | null;
 }
 
-export interface IResponseUserDTO extends IUserDTO {
+export interface IResponseUserDTO extends IBaseUserDTO {
   id: string;
-  avatar_url?: string;
+  avatar_url: string | null;
 }
 
 export interface IAuthenticationUserDTO {

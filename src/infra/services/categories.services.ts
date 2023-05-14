@@ -7,7 +7,6 @@ import {
 
 import { AppError } from "../../core/errors/app.error";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
-import { CategoryMapper } from "../server/mappers/category.mapper";
 import { Category } from "../database/entities/category.entity";
 import { appUrl } from "../configs/upload";
 
@@ -34,19 +33,24 @@ class CategoriesServices {
   }
 
   async findAll(): Promise<IResponseCategoryDTO[]> {
-    const categories = (await this.categoriesRepository.findAll()) ?? [];
-    return categories.map((category) => CategoryMapper.toDTO(category));
+    return (await this.categoriesRepository.findAll()) ?? [];
   }
 
-  //errado
-  async findById(id: string): Promise<IResponseCategoryDTO> {
-    const category = await this.categoriesRepository.findOneById(id);
+  async findOneByIdWithServicesAndServicesImages(
+    id: string
+  ): Promise<IResponseCategoryDTO> {
+    const category =
+      await this.categoriesRepository.findOneByIdWithServicesAndServicesImages(
+        id,
+        0,
+        30
+      );
 
     if (!category) {
       throw new AppError("Category does not exist", 404);
     }
 
-    return CategoryMapper.toDTO(category);
+    return category;
   }
 
   async create(categoryDTO: ICreateCategoryDTO): Promise<void> {

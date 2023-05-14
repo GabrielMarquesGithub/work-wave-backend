@@ -9,6 +9,9 @@ import {
 import { appDataSource } from "..";
 
 import { Category } from "../entities/category.entity";
+import { categorySelect } from "../selects/category.select";
+import { serviceSelect } from "../selects/service.select";
+import { serviceImageSelect } from "../selects/serviceImage.select";
 
 class CategoriesRepository implements ICategoriesRepository {
   private repository: Repository<Category>;
@@ -17,27 +20,31 @@ class CategoriesRepository implements ICategoriesRepository {
     this.repository = appDataSource.getRepository(Category);
   }
 
-  async findOneById(id: string): Promise<Category | undefined> {
-    const category = await this.repository.findOneBy({ id });
-    return category !== null ? category : undefined;
+  async findOneById(id: string): Promise<Category | null> {
+    return await this.repository.findOneBy({ id });
   }
 
-  async findOneByIdWithServicesAndImagesServices(
+  async findOneByIdWithServicesAndServicesImages(
     id: string,
     skip: number,
     limit: number
-  ): Promise<Category | undefined> {
-    await this.repository.find({ select: { created_at: true } });
-    throw new Error("Method not implemented.");
+  ): Promise<Category | null> {
+    return await this.repository.findOne({
+      where: { id },
+      select: {
+        ...categorySelect,
+        services: { ...serviceSelect, images: serviceImageSelect },
+      },
+      relations: { services: { images: true } },
+    });
   }
 
-  async findOneByName(name: string): Promise<Category | undefined> {
-    const category = await this.repository.findOneBy({ name });
-    return category !== null ? category : undefined;
+  async findOneByName(name: string): Promise<Category | null> {
+    return await this.repository.findOneBy({ name });
   }
 
-  async findAll(): Promise<Category[] | undefined> {
-    return await this.repository.find();
+  async findAll(): Promise<Category[] | null> {
+    return await this.repository.find({ select: categorySelect });
   }
 
   async create(categoryDTO: ICreateCategoryDTO): Promise<void> {

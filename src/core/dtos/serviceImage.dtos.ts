@@ -1,4 +1,4 @@
-interface IServiceImageDTO {
+interface IBaseServiceImageDTO {
   url: string;
   name: string;
   file_size: number;
@@ -6,4 +6,4 @@ interface IServiceImageDTO {
   service_id: string;
 }
 
-export interface ICreateServiceImageDTO extends IServiceImageDTO {}
+export interface ICreateServiceImageDTO extends IBaseServiceImageDTO {}

@@ -1,19 +1,16 @@
-import { ServiceImage } from "../../infra/database/entities/serviceImage.entity";
-
 //DTO ou VO
-interface IServiceDTO {
+interface IBaseServiceDTO {
   name: string;
   price: number;
-  description?: string;
-  observation?: string;
+  description: string | null;
+  observation: string | null;
   order: number;
   user_id: string;
-  category_id?: string;
+  category_id: string | null;
 }
 
-export interface ICreateServiceDTO extends IServiceDTO {}
+export interface ICreateServiceDTO extends IBaseServiceDTO {}
 
-export interface IUpdateServiceDTO extends IServiceDTO {
+export interface IUpdateServiceDTO extends IBaseServiceDTO {
   id: string;
-  images?: ServiceImage[];
 }

@@ -5,20 +5,8 @@ import { ICreateCategoryDTO } from "../../../core/dtos/category.dtos";
 import { CategoriesRepository } from "../../database/repositories/categories.repository";
 import { CategoriesServices } from "../../services/categories.services";
 import { LocalStorageProvider } from "../../providers/localStorage.provider";
-import { ServicesRepository } from "../../database/repositories/services.repository";
-import { ServicesImagesRepository } from "../../database/repositories/servicesImages.repository";
-import { ServicesServices } from "../../services/services.services";
 
 const storageProvider = new LocalStorageProvider();
-
-const servicesRepository = new ServicesRepository();
-const servicesImagesRepository = new ServicesImagesRepository();
-
-const servicesServices = new ServicesServices(
-  servicesRepository,
-  servicesImagesRepository,
-  storageProvider
-);
 
 const categoriesRepository = new CategoriesRepository();
 const categoriesServices = new CategoriesServices(
@@ -33,10 +21,14 @@ class CategoriesControllers {
     return res.json(all);
   }
 
-  async findByIdWithServices(req: Request, res: Response): Promise<Response> {
+  async findOneByIdWithServicesAndServicesImages(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     const { id } = req.params;
 
-    const category = await categoriesServices.findById(id);
+    const category =
+      await categoriesServices.findOneByIdWithServicesAndServicesImages(id);
 
     return res.json(category);
   }

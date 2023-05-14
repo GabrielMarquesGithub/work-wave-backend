@@ -11,23 +11,21 @@ const usersControllers = new UsersControllers();
 
 const imageUpload = multer(multerConfig);
 
+usersRoutes.post("/", usersControllers.create);
+
+usersRoutes.use(ensureAuthentication);
+
 usersRoutes.put(
   "/avatar",
   imageUpload.single("image"),
-  ensureAuthentication,
+
   usersControllers.createAvatar
 );
 
-usersRoutes.delete(
-  "/avatar",
-  ensureAuthentication,
-  usersControllers.deleteAvatar
-);
+usersRoutes.delete("/avatar", usersControllers.deleteAvatar);
 
-usersRoutes.post("/", usersControllers.create);
+usersRoutes.put("/", usersControllers.update);
 
-usersRoutes.put("/", ensureAuthentication, usersControllers.update);
-
-usersRoutes.delete("/:id", ensureAuthentication, usersControllers.delete);
+usersRoutes.delete("/:id", usersControllers.delete);
 
 export { usersRoutes };

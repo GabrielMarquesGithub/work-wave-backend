@@ -17,22 +17,22 @@ class Category {
   @Column()
   name!: string;
 
-  @Column()
-  description?: string;
+  @Column({ type: "varchar", nullable: true })
+  description!: string | null;
 
   @Column({ type: "varchar", nullable: true })
-  icon?: string | null;
+  icon!: string | null;
 
   @Column({ type: "varchar", nullable: true })
-  icon_url?: string | null;
+  icon_url!: string | null;
 
   @CreateDateColumn()
   created_at!: Date;
 
   //relationship with other classes
 
-  @OneToMany(() => Service, (service) => service.user)
-  services?: Service[];
+  @OneToMany(() => Service, (service) => service.category)
+  services!: Service[] | null;
 
   constructor() {
     if (!this.id) {

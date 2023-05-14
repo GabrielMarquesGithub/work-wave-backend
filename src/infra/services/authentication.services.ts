@@ -16,7 +16,6 @@ import { validatePasswordFormat } from "../../core/utils/validation/validatePass
 
 import { authConfig } from "../configs/auth.config";
 import { User } from "../database/entities/user.entity";
-import { UserMapper } from "../server/mappers/user.mapper";
 
 interface ITokens {
   token: string;
@@ -44,11 +43,17 @@ class AuthenticationServices {
 
   async createResponse(user: User): Promise<IResponse> {
     // Desestruturando infos a serem retornadas junto do token
-    const responseUser = UserMapper.toDTO(user);
     const tokens = await this.createTokens(user.id);
 
     return {
-      user: responseUser,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        cep: user.cep,
+        avatar_url: user.avatar_url,
+      },
       ...tokens,
     };
   }

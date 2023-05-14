@@ -17,13 +17,12 @@ class UsersTokensRepository implements IUsersTokensRepository {
   async findOneByUserIdAndRefreshTokenWithUser(
     userId: string,
     refreshToken: string
-  ): Promise<UserToken | undefined> {
-    const userToken = await this.repository.findOne({
+  ): Promise<UserToken | null> {
+    return await this.repository.findOne({
       where: { user_id: userId, refresh_token: refreshToken },
       //Dessa maneira podemos retornar relacionamentos de entidades relacionadas
       relations: { user: true },
     });
-    return userToken !== null ? userToken : undefined;
   }
 
   async create({ ...userTokenDTO }: ICreateUserTokenDTO): Promise<UserToken> {

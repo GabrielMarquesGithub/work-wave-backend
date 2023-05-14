@@ -9,6 +9,8 @@ import { IServicesRepository } from "../../../core/interfaces/servicesRepository
 import { appDataSource } from "..";
 
 import { Service } from "../entities/service.entity";
+import { serviceSelect } from "../selects/service.select";
+import { serviceImageSelect } from "../selects/serviceImage.select";
 
 class ServicesRepository implements IServicesRepository {
   private repository: Repository<Service>;
@@ -17,15 +19,15 @@ class ServicesRepository implements IServicesRepository {
     this.repository = appDataSource.getRepository(Service);
   }
 
-  async findOneById(id: string): Promise<Service | undefined> {
-    const service = await this.repository.findOneBy({ id });
-    return service !== null ? service : undefined;
+  async findOneById(id: string): Promise<Service | null> {
+    return await this.repository.findOneBy({ id });
   }
 
-  async findByUserId(id: string): Promise<Service[] | undefined> {
+  async findByUserId(id: string): Promise<Service[] | null> {
     return await this.repository.find({
       where: { user_id: id },
       relations: { images: true },
+      select: { ...serviceSelect, images: serviceImageSelect },
     });
   }
 

@@ -5,7 +5,7 @@ export interface IUsersTokensRepository {
   findOneByUserIdAndRefreshTokenWithUser(
     userId: string,
     refreshToken: string
-  ): Promise<UserToken | undefined>;
+  ): Promise<UserToken | null>;
   create({}: ICreateUserTokenDTO): Promise<UserToken>;
   delete(id: string): Promise<void>;
 }

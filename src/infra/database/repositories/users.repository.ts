@@ -14,14 +14,12 @@ class UsersRepository implements IUsersRepository {
     this.repository = appDataSource.getRepository(User);
   }
 
-  async findOneById(id: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ id });
-    return user !== null ? user : undefined;
+  async findOneById(id: string): Promise<User | null> {
+    return await this.repository.findOneBy({ id });
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
-    const user = await this.repository.findOneBy({ email });
-    return user !== null ? user : undefined;
+  async findOneByEmail(email: string): Promise<User | null> {
+    return await this.repository.findOneBy({ email });
   }
 
   async create(userDTO: ICreateUserDTO): Promise<void> {

@@ -3,14 +3,14 @@ import { ICreateCategoryDTO, IUpdateCategoryDTO } from "../dtos/category.dtos";
 import { Category } from "../../infra/database/entities/category.entity";
 
 export interface ICategoriesRepository {
-  findOneById(id: string): Promise<Category | undefined>;
-  findOneByIdWithServicesAndImagesServices(
+  findOneById(id: string): Promise<Category | null>;
+  findOneByIdWithServicesAndServicesImages(
     id: string,
     skip: number,
     limit: number
-  ): Promise<Category | undefined>;
-  findOneByName(name: string): Promise<Category | undefined>;
-  findAll(): Promise<Category[] | undefined>;
+  ): Promise<Category | null>;
+  findOneByName(name: string): Promise<Category | null>;
+  findAll(): Promise<Category[] | null>;
   create({}: ICreateCategoryDTO): Promise<void>;
   update(category: Category, categoryDTO: IUpdateCategoryDTO): Promise<void>;
   delete(id: string): Promise<void>;

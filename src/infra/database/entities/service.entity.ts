@@ -25,11 +25,11 @@ class Service {
   @Column()
   price!: number;
 
-  @Column()
-  description?: string;
+  @Column({ type: "varchar", nullable: true })
+  description!: string | null;
 
-  @Column()
-  observation?: string;
+  @Column({ type: "varchar", nullable: true })
+  observation!: string | null;
 
   @Column()
   order!: number;
@@ -41,8 +41,8 @@ class Service {
   @Column()
   user_id!: string;
 
-  @Column()
-  category_id?: string;
+  @Column({ type: "varchar", nullable: true })
+  category_id!: string | null;
 
   @ManyToOne(() => User, (user) => user.services)
   @JoinColumn({ name: "user_id" })
@@ -50,10 +50,10 @@ class Service {
 
   @ManyToOne(() => Category, (category) => category.services)
   @JoinColumn({ name: "category_id" })
-  category?: User;
+  category!: User | null;
 
   @OneToMany(() => ServiceImage, (serviceImage) => serviceImage.service)
-  images?: ServiceImage[];
+  images!: ServiceImage[] | null;
 
   constructor() {
     if (!this.id) {

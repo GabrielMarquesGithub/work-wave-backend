@@ -1,8 +1,8 @@
 //DTO ou VO
-interface IUserTokenDTO {
+interface IBaseUserTokenDTO {
   refresh_token: string;
   expires_date: Date;
   user_id: string;
 }
 
-export interface ICreateUserTokenDTO extends IUserTokenDTO {}
+export interface ICreateUserTokenDTO extends IBaseUserTokenDTO {}

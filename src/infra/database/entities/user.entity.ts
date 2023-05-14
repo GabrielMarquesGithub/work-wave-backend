@@ -32,10 +32,10 @@ class User {
   cep!: string;
 
   @Column({ type: "varchar", nullable: true })
-  avatar?: string | null;
+  avatar!: string | null;
 
   @Column({ type: "varchar", nullable: true })
-  avatar_url?: string | null;
+  avatar_url!: string | null;
 
   @CreateDateColumn()
   created_at!: Date;
@@ -43,7 +43,7 @@ class User {
   //relationship with other classes
 
   @OneToMany(() => Service, (service) => service.user)
-  services?: Service[];
+  services!: Service[] | null;
 
   constructor() {
     if (!this.id) {

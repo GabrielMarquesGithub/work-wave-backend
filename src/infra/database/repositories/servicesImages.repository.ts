@@ -14,9 +14,8 @@ class ServicesImagesRepository implements IServicesImagesRepository {
     this.repository = appDataSource.getRepository(ServiceImage);
   }
 
-  async findOneById(id: string): Promise<ServiceImage | undefined> {
-    const image = await this.repository.findOneBy({ id });
-    return image !== null ? image : undefined;
+  async findOneById(id: string): Promise<ServiceImage | null> {
+    return this.repository.findOneBy({ id });
   }
 
   async create(imageDTO: ICreateServiceImageDTO): Promise<ServiceImage> {

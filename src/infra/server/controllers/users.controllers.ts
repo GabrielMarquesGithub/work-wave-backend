@@ -25,7 +25,7 @@ class UsersControllers {
 
   async update(req: Request, res: Response): Promise<Response> {
     //lidando com um possível erro na requisição
-    const { password, avatar_url, ...userDTO } = req.body as IUpdateRequestBody;
+    const { password, ...userDTO } = req.body as IUpdateRequestBody;
 
     await usersServices.update(userDTO);
 
