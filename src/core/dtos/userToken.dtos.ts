@@ -1,8 +1,5 @@
 //DTO ou VO
-interface IBaseUserTokenDTO {
-  refresh_token: string;
-  expires_date: Date;
-  user_id: string;
-}
+import { UserToken } from "../../infra/database/entities/userToken.entity";
 
-export interface ICreateUserTokenDTO extends IBaseUserTokenDTO {}
+export interface ICreateUserTokenDTO
+  extends Pick<UserToken, "refresh_token" | "expires_date" | "user_id"> {}

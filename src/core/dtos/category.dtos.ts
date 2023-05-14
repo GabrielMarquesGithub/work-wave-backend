@@ -1,26 +1,10 @@
-import { Service } from "../../infra/database/entities/service.entity";
+import { Category } from "../../infra/database/entities/category.entity";
 
-//DTO ou VO
-interface ICategoryDTO {
-  name: string;
-  description: string | null;
-}
+export interface ICreateCategoryDTO
+  extends Pick<Category, "name" | "description"> {}
 
-export interface ICreateCategoryDTO extends ICategoryDTO {}
+export interface IUpdateCategoryDTO
+  extends Pick<Category, "icon" | "icon_url"> {}
 
-export interface IUpdateCategoryDTO extends ICategoryDTO {
-  id: string;
-  icon: string | null;
-  icon_url: string | null;
-}
-
-export interface IResponseCategoryDTO extends ICategoryDTO {
-  id: string;
-  icon_url: string | null;
-  services: Service[] | null;
-}
-
-// export interface IResponseCategoryDTO extends ICategoryDTO {
-//   id: string;
-//   icon_url?: string;
-// }
+export interface IResponseCategoryDTO
+  extends Pick<Category, "id" | "name" | "description" | "icon_url"> {}

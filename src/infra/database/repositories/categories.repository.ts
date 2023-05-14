@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { ICategoriesRepository } from "../../../core/interfaces/categoriesRepository.interface";
 import {
   ICreateCategoryDTO,
+  IResponseCategoryDTO,
   IUpdateCategoryDTO,
 } from "../../../core/dtos/category.dtos";
 
@@ -43,7 +44,7 @@ class CategoriesRepository implements ICategoriesRepository {
     return await this.repository.findOneBy({ name });
   }
 
-  async findAll(): Promise<Category[] | null> {
+  async findAll(): Promise<IResponseCategoryDTO[] | null> {
     return await this.repository.find({ select: categorySelect });
   }
 

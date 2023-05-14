@@ -1,16 +1,19 @@
-//DTO ou VO
-interface IBaseServiceDTO {
-  name: string;
-  price: number;
-  description: string | null;
-  observation: string | null;
-  order: number;
-  user_id: string;
-  category_id: string | null;
-}
+import { Service } from "../../infra/database/entities/service.entity";
 
-export interface ICreateServiceDTO extends IBaseServiceDTO {}
+export interface ICreateServiceDTO
+  extends Pick<
+    Service,
+    "name" | "price" | "description" | "observation" | "user_id" | "category_id"
+  > {}
 
-export interface IUpdateServiceDTO extends IBaseServiceDTO {
-  id: string;
-}
+export interface IUpdateServiceDTO
+  extends Pick<
+    Service,
+    | "id"
+    | "name"
+    | "price"
+    | "description"
+    | "observation"
+    | "user_id"
+    | "category_id"
+  > {}

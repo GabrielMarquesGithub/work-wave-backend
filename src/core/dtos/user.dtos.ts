@@ -1,27 +1,19 @@
-//DTO ou VO
-interface IBaseUserDTO {
-  name: string;
-  email: string;
-  phone: string;
-  cep: string;
-}
+import { User } from "../../infra/database/entities/user.entity";
 
-export interface ICreateUserDTO extends IBaseUserDTO {
-  password: string;
-}
+export interface ICreateUserDTO
+  extends Pick<User, "name" | "email" | "phone" | "cep" | "password"> {}
 
-export interface IUpdateUserDTO extends IBaseUserDTO {
-  id: string;
-  avatar: string | null;
-  avatar_url: string | null;
-}
+export interface IUpdateUserDTO
+  extends Pick<
+    User,
+    "id" | "name" | "email" | "phone" | "cep" | "avatar" | "avatar_url"
+  > {}
 
-export interface IResponseUserDTO extends IBaseUserDTO {
-  id: string;
-  avatar_url: string | null;
-}
+export interface IResponseUserDTO
+  extends Pick<
+    User,
+    "id" | "name" | "email" | "phone" | "cep" | "avatar_url"
+  > {}
 
-export interface IAuthenticationUserDTO {
-  email: string;
-  password: string;
-}
+export interface IAuthenticationUserDTO
+  extends Pick<User, "email" | "password"> {}
