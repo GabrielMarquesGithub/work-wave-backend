@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 
 import {
   ICreateServiceDTO,
@@ -9,8 +9,11 @@ import { IServicesRepository } from "../../../core/interfaces/servicesRepository
 import { appDataSource } from "..";
 
 import { Service } from "../entities/service.entity";
-import { serviceSelect } from "../selects/service.select";
-import { serviceImageSelect } from "../selects/serviceImage.select";
+
+import {
+  ServiceOrderOptions,
+  serviceOrderConstants,
+} from "../../configs/orderConstants";
 
 class ServicesRepository implements IServicesRepository {
   private repository: Repository<Service>;
@@ -23,11 +26,46 @@ class ServicesRepository implements IServicesRepository {
     return await this.repository.findOneBy({ id });
   }
 
-  async findByUserId(id: string): Promise<Service[] | null> {
+  async findByUserIdWithServicesImages(id: string): Promise<Service[] | null> {
     return await this.repository.find({
       where: { user_id: id },
       relations: { images: true },
-      select: { ...serviceSelect, images: serviceImageSelect },
+    });
+  }
+
+  async findByCategoryIdWithServicesImages(
+    id: string,
+    skip: number,
+    take: number,
+    order: ServiceOrderOptions,
+    cep?: string
+  ): Promise<Service[] | null> {
+    return await this.repository.find({
+      where: { category_id: id, user: { cep } },
+      relations: { images: true },
+      order: serviceOrderConstants[order],
+      skip,
+      take,
+    });
+  }
+
+  async findBySearchTextWithServicesImages(
+    searchText: string,
+    skip: number,
+    take: number,
+    order: ServiceOrderOptions,
+    cep?: string
+  ): Promise<Service[] | null> {
+    return await this.repository.find({
+      where: [
+        { name: ILike(`%${searchText}%`), user: { cep } },
+        { description: ILike(`%${searchText}%`), user: { cep } },
+        { observation: ILike(`%${searchText}%`), user: { cep } },
+      ],
+      relations: { images: true },
+      order: serviceOrderConstants[order],
+      skip,
+      take,
     });
   }
 

@@ -2,14 +2,17 @@ import { IServicesRepository } from "../../core/interfaces/servicesRepository.in
 import { IServicesImagesRepository } from "../../core/interfaces/servicesImagesRepository.interface";
 
 import {
-  ICreateServiceDTO,
-  IUpdateServiceDTO,
+  ICreateServiceRequestDTO,
+  IResponseServiceDTO,
+  IUpdateServiceRequestDTO,
 } from "../../core/dtos/service.dtos";
 
 import { AppError } from "../../core/errors/app.error";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 import { appUrl } from "../configs/upload";
 import { Service } from "../database/entities/service.entity";
+import { ServiceMapper } from "../server/mappers/service.mapper";
+import { ServiceOrderOptions } from "../configs/orderConstants";
 
 class ServicesServices {
   private servicesRepository: IServicesRepository;
@@ -36,15 +39,62 @@ class ServicesServices {
     return service;
   }
 
-  async findByUserId(id: string): Promise<Service[]> {
-    return (await this.servicesRepository.findByUserId(id)) ?? [];
+  async findByUserIdWithServicesImages(
+    id: string
+  ): Promise<IResponseServiceDTO[]> {
+    const services =
+      (await this.servicesRepository.findByUserIdWithServicesImages(id)) ?? [];
+    return services.map((service) => ServiceMapper.toDTO(service));
   }
 
-  async create(serviceDTO: ICreateServiceDTO): Promise<void> {
-    await this.servicesRepository.create(serviceDTO);
+  async findByCategoryIdWithServicesImages(
+    id: string,
+    page: number = 1,
+    limit: number = 30,
+    order: ServiceOrderOptions = "recentDate",
+    cep?: string
+  ): Promise<IResponseServiceDTO[]> {
+    const skip = (page - 1) * limit;
+
+    const services =
+      (await this.servicesRepository.findByCategoryIdWithServicesImages(
+        id,
+        skip,
+        limit,
+        order,
+        cep
+      )) ?? [];
+    return services.map((service) => ServiceMapper.toDTO(service));
   }
 
-  async update(serviceDTO: IUpdateServiceDTO): Promise<void> {
+  async findBySearchTextWithServicesImages(
+    searchText: string,
+    page: number = 1,
+    limit: number = 30,
+    order: ServiceOrderOptions = "recentDate",
+    cep?: string
+  ): Promise<IResponseServiceDTO[]> {
+    const skip = (page - 1) * limit;
+
+    // Lidando com espaços
+    searchText = searchText.replace("-", " ");
+
+    const services =
+      (await this.servicesRepository.findBySearchTextWithServicesImages(
+        searchText,
+        skip,
+        limit,
+        order,
+        cep
+      )) ?? [];
+    return services.map((service) => ServiceMapper.toDTO(service));
+  }
+
+  async create(serviceDTO: ICreateServiceRequestDTO): Promise<void> {
+    await this.servicesRepository.create({ ...serviceDTO, order: 0 });
+  }
+
+  async update(serviceDTO: IUpdateServiceRequestDTO): Promise<void> {
     const service = await this.checkIfServiceExists(serviceDTO.id);
 
     await this.servicesRepository.update(service, serviceDTO);

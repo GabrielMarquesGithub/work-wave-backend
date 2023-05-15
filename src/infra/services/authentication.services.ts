@@ -1,20 +1,22 @@
 import { sign, verify } from "jsonwebtoken";
 import { compare } from "bcryptjs";
 
-import { AppError } from "../../core/errors/app.error";
-
 import { IUsersRepository } from "../../core/interfaces/usersRepository.interface";
 import { IUsersTokensRepository } from "../../core/interfaces/usersTokensRepository.interface";
+import { IDateProvider } from "../../core/interfaces/dateProvider.interface";
+
 import {
   IAuthenticationUserDTO,
   IResponseUserDTO,
 } from "../../core/dtos/user.dtos";
-import { IDateProvider } from "../../core/interfaces/dateProvider.interface";
+
+import { AppError } from "../../core/errors/app.error";
+
+import { authConfig } from "../configs/auth.config";
 
 import { validateEmailFormat } from "../../core/utils/validation/validateEmailFormat";
 import { validatePasswordFormat } from "../../core/utils/validation/validatePasswordFormat";
 
-import { authConfig } from "../configs/auth.config";
 import { User } from "../database/entities/user.entity";
 
 interface ITokens {

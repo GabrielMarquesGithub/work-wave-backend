@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 
-import { ICreateUserDTO, IUpdateUserDTO } from "../../../core/dtos/user.dtos";
+import {
+  ICreateUserRequestDTO,
+  IUpdateUserRequestDTO,
+} from "../../../core/dtos/user.dtos";
 
 import { UsersRepository } from "../../database/repositories/users.repository";
 import { UsersServices } from "../../services/users.services";
@@ -10,13 +13,14 @@ const usersRepository = new UsersRepository();
 const storageProvider = new LocalStorageProvider();
 const usersServices = new UsersServices(usersRepository, storageProvider);
 
-interface IUpdateRequestBody extends IUpdateUserDTO {
+// Tipo criado para prevenção de falhas
+interface IUpdateRequestBody extends IUpdateUserRequestDTO {
   password?: string;
 }
 
 class UsersControllers {
   async create(req: Request, res: Response): Promise<Response> {
-    const userDTO = req.body as ICreateUserDTO;
+    const userDTO = req.body as ICreateUserRequestDTO;
 
     await usersServices.create(userDTO);
 

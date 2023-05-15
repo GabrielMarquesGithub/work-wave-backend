@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 
 import { ICategoriesRepository } from "../../../core/interfaces/categoriesRepository.interface";
+
 import {
   ICreateCategoryDTO,
   IResponseCategoryDTO,
@@ -10,9 +11,6 @@ import {
 import { appDataSource } from "..";
 
 import { Category } from "../entities/category.entity";
-import { categorySelect } from "../selects/category.select";
-import { serviceSelect } from "../selects/service.select";
-import { serviceImageSelect } from "../selects/serviceImage.select";
 
 class CategoriesRepository implements ICategoriesRepository {
   private repository: Repository<Category>;
@@ -25,27 +23,12 @@ class CategoriesRepository implements ICategoriesRepository {
     return await this.repository.findOneBy({ id });
   }
 
-  async findOneByIdWithServicesAndServicesImages(
-    id: string,
-    skip: number,
-    limit: number
-  ): Promise<Category | null> {
-    return await this.repository.findOne({
-      where: { id },
-      select: {
-        ...categorySelect,
-        services: { ...serviceSelect, images: serviceImageSelect },
-      },
-      relations: { services: { images: true } },
-    });
-  }
-
   async findOneByName(name: string): Promise<Category | null> {
     return await this.repository.findOneBy({ name });
   }
 
-  async findAll(): Promise<IResponseCategoryDTO[] | null> {
-    return await this.repository.find({ select: categorySelect });
+  async findAll(): Promise<Category[] | null> {
+    return await this.repository.find();
   }
 
   async create(categoryDTO: ICreateCategoryDTO): Promise<void> {

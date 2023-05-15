@@ -11,9 +11,17 @@ const servicesControllers = new ServicesControllers();
 
 const imageUpload = multer(multerConfig);
 
+servicesRoutes.get(
+  "/search/:searchText",
+  servicesControllers.findBySearchTextWithServicesImages
+);
+
 servicesRoutes.use(ensureAuthentication);
 
-servicesRoutes.get("/user/:id", servicesControllers.findByUserId);
+servicesRoutes.get(
+  "/user/:id",
+  servicesControllers.findByUserIdWithServicesImages
+);
 
 servicesRoutes.post("/", servicesControllers.create);
 

@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 
 import {
-  ICreateServiceDTO,
-  IUpdateServiceDTO,
+  ICreateServiceRequestDTO,
+  IUpdateServiceRequestDTO,
 } from "../../../core/dtos/service.dtos";
 
 import { ServicesRepository } from "../../database/repositories/services.repository";
 import { ServicesServices } from "../../services/services.services";
 import { ServicesImagesRepository } from "../../database/repositories/servicesImages.repository";
 import { LocalStorageProvider } from "../../providers/localStorage.provider";
+import { ServiceOrderOptions } from "../../configs/orderConstants";
 
 const servicesRepository = new ServicesRepository();
 const servicesImagesRepository = new ServicesImagesRepository();
@@ -21,16 +22,37 @@ const servicesServices = new ServicesServices(
 );
 
 class ServicesControllers {
-  async findByUserId(req: Request, res: Response): Promise<Response> {
+  async findByUserIdWithServicesImages(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     const { id } = req.params;
 
-    const services = await servicesServices.findByUserId(id);
+    const services = await servicesServices.findByUserIdWithServicesImages(id);
 
     return res.json(services);
   }
 
+  async findBySearchTextWithServicesImages(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const { searchText } = req.params;
+    const { page, limit, order, cep } = req.query;
+
+    const services = await servicesServices.findBySearchTextWithServicesImages(
+      searchText,
+      // Por padrão  o typeorm interpreta os query corretamente como number
+      page as unknown as number,
+      limit as unknown as number,
+      order as unknown as ServiceOrderOptions,
+      cep as unknown as string
+    );
+    return res.json(services);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
-    const serviceDTO = req.body as ICreateServiceDTO;
+    const serviceDTO = req.body as ICreateServiceRequestDTO;
 
     await servicesServices.create(serviceDTO);
 
@@ -38,7 +60,7 @@ class ServicesControllers {
   }
 
   async update(req: Request, res: Response): Promise<Response> {
-    const serviceDTO = req.body as IUpdateServiceDTO;
+    const serviceDTO = req.body as IUpdateServiceRequestDTO;
 
     await servicesServices.update(serviceDTO);
 

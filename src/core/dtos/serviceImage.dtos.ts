@@ -5,3 +5,6 @@ export interface ICreateServiceImageDTO
     ServiceImage,
     "url" | "name" | "file_size" | "format" | "service_id"
   > {}
+
+export interface IResponseServiceImageDTO
+  extends Pick<ServiceImage, "id" | "url" | "name"> {}

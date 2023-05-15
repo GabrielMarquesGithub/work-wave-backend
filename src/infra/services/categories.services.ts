@@ -1,6 +1,6 @@
 import { ICategoriesRepository } from "../../core/interfaces/categoriesRepository.interface";
 import {
-  ICreateCategoryDTO,
+  ICreateCategoryRequestDTO,
   IResponseCategoryDTO,
   IUpdateCategoryDTO,
 } from "../../core/dtos/category.dtos";
@@ -9,6 +9,8 @@ import { AppError } from "../../core/errors/app.error";
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 import { Category } from "../database/entities/category.entity";
 import { appUrl } from "../configs/upload";
+
+import { CategoryMapper } from "../server/mappers/category.mapper";
 
 class CategoriesServices {
   private categoriesRepository: ICategoriesRepository;
@@ -33,27 +35,16 @@ class CategoriesServices {
   }
 
   async findAll(): Promise<IResponseCategoryDTO[]> {
-    return (await this.categoriesRepository.findAll()) ?? [];
+    const categories = (await this.categoriesRepository.findAll()) ?? [];
+
+    return categories.map((category) => CategoryMapper.toDTO(category));
   }
 
-  async findOneByIdWithServicesAndServicesImages(
-    id: string
-  ): Promise<IResponseCategoryDTO> {
-    const category =
-      await this.categoriesRepository.findOneByIdWithServicesAndServicesImages(
-        id,
-        0,
-        30
-      );
-
-    if (!category) {
-      throw new AppError("Category does not exist", 404);
-    }
-
-    return category;
+  async findOneById(id: string): Promise<IResponseCategoryDTO> {
+    return CategoryMapper.toDTO(await this.checkIfCategoryExists(id));
   }
 
-  async create(categoryDTO: ICreateCategoryDTO): Promise<void> {
+  async create(categoryDTO: ICreateCategoryRequestDTO): Promise<void> {
     const category = await this.categoriesRepository.findOneByName(
       categoryDTO.name
     );
@@ -85,7 +76,6 @@ class CategoriesServices {
     await this.storageProvider.save(file, "icon");
 
     const newCategory: IUpdateCategoryDTO = {
-      ...category,
       icon: file,
       icon_url: `${appUrl}icon/${file}`,
     };

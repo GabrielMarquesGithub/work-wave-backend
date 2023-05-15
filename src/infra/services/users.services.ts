@@ -1,19 +1,26 @@
 import { hash } from "bcryptjs";
 
 import { IUsersRepository } from "../../core/interfaces/usersRepository.interface";
-import { ICreateUserDTO, IUpdateUserDTO } from "../../core/dtos/user.dtos";
+import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
+import {
+  ICreateUserRequestDTO,
+  IUpdateUserDTO,
+  IUpdateUserRequestDTO,
+} from "../../core/dtos/user.dtos";
 
 import { AppError } from "../../core/errors/app.error";
+
+import { appUrl } from "../configs/upload";
 
 import { validateEmailFormat } from "../../core/utils/validation/validateEmailFormat";
 import { validatePasswordFormat } from "../../core/utils/validation/validatePasswordFormat";
 import { validateCEPFormat } from "../../core/utils/validation/validateCEPFormat";
 import { validatePhoneFormat } from "../../core/utils/validation/validatePhoneFormat";
+
 import { formatCEP } from "../../core/utils/formatting/formatCEP";
 import { formatPhone } from "../../core/utils/formatting/formatPhone";
-import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
+
 import { User } from "../database/entities/user.entity";
-import { appUrl } from "../configs/upload";
 
 class UsersServices {
   private usersRepository: IUsersRepository;
@@ -37,7 +44,7 @@ class UsersServices {
     return user;
   }
 
-  async create(userDTO: ICreateUserDTO): Promise<void> {
+  async create(userDTO: ICreateUserRequestDTO): Promise<void> {
     validateEmailFormat(userDTO.email);
     validatePasswordFormat(userDTO.password);
     validateCEPFormat(userDTO.cep);
@@ -60,7 +67,7 @@ class UsersServices {
     await this.usersRepository.create({ ...userDTO, password: hashedPassword });
   }
 
-  async update(userDTO: IUpdateUserDTO): Promise<void> {
+  async update(userDTO: IUpdateUserRequestDTO): Promise<void> {
     validateEmailFormat(userDTO.email);
     validateCEPFormat(userDTO.cep);
     validatePhoneFormat(userDTO.phone);
