@@ -29,6 +29,13 @@ export class CreateTableServices1682782540027 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "discount",
+            type: "decimal",
+            precision: 10,
+            scale: 2,
+            isNullable: false,
+          },
+          {
             name: "description",
             type: "varchar",
             isNullable: true,
