@@ -29,7 +29,7 @@ const categoriesServices = new CategoriesServices(
 
 class CategoriesControllers {
   async findAll(req: Request, res: Response): Promise<Response> {
-    const all = await categoriesServices.findAll();
+    const all = await categoriesServices.find();
 
     return res.json(all);
   }
@@ -54,6 +54,28 @@ class CategoriesControllers {
     category.services = services;
 
     return res.json(category);
+  }
+
+  async findWithServicesAndServicesImages(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const categories = await categoriesServices.find(1, 6);
+
+    await Promise.all(
+      categories.map(async (category) => {
+        const services =
+          await servicesServices.findByCategoryIdWithServicesImages(
+            category.id,
+            1,
+            8
+          );
+
+        category.services = services;
+      })
+    );
+
+    return res.json(categories);
   }
 
   async create(req: Request, res: Response): Promise<Response> {

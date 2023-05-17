@@ -7,6 +7,7 @@ export interface ICreateServiceDTO
     Service,
     | "name"
     | "price"
+    | "discount"
     | "description"
     | "observation"
     | "order"
@@ -17,7 +18,13 @@ export interface ICreateServiceDTO
 export interface ICreateServiceRequestDTO
   extends Pick<
     Service,
-    "name" | "price" | "description" | "observation" | "user_id" | "category_id"
+    | "name"
+    | "price"
+    | "discount"
+    | "description"
+    | "observation"
+    | "user_id"
+    | "category_id"
   > {}
 
 export interface IUpdateServiceDTO
@@ -26,6 +33,7 @@ export interface IUpdateServiceDTO
     | "id"
     | "name"
     | "price"
+    | "discount"
     | "description"
     | "observation"
     | "order"
@@ -39,6 +47,7 @@ export interface IUpdateServiceRequestDTO
     | "id"
     | "name"
     | "price"
+    | "discount"
     | "description"
     | "observation"
     | "order"
@@ -48,7 +57,7 @@ export interface IUpdateServiceRequestDTO
 
 type ResponseServiceType = Pick<
   Service,
-  "id" | "name" | "price" | "description" | "observation"
+  "id" | "name" | "price" | "discount" | "description" | "observation"
 > & { images: IResponseServiceImageDTO[] | null };
 
 export interface IResponseServiceDTO extends ResponseServiceType {}

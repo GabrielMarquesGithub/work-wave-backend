@@ -34,8 +34,15 @@ class CategoriesServices {
     return category;
   }
 
-  async findAll(): Promise<IResponseCategoryDTO[]> {
-    const categories = (await this.categoriesRepository.findAll()) ?? [];
+  async find(page?: number, limit?: number): Promise<IResponseCategoryDTO[]> {
+    let skip: number | undefined;
+
+    if (page && limit) {
+      skip = (page - 1) * limit;
+    }
+
+    const categories =
+      (await this.categoriesRepository.find(skip, limit)) ?? [];
 
     return categories.map((category) => CategoryMapper.toDTO(category));
   }

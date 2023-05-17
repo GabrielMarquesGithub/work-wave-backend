@@ -11,6 +11,7 @@ class ServiceMapper {
       id: service.id,
       name: service.name,
       price: service.price,
+      discount: service.discount,
       description: service.description,
       observation: service.observation,
       images: this.handleServicesImages(service.images),

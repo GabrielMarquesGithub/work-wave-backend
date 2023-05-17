@@ -24,6 +24,9 @@ class Service {
   @Column()
   price!: number;
 
+  @Column()
+  discount!: number;
+
   @Column({ type: "varchar", nullable: true })
   description!: string | null;
 

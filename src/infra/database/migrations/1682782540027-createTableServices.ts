@@ -30,10 +30,8 @@ export class CreateTableServices1682782540027 implements MigrationInterface {
           },
           {
             name: "discount",
-            type: "decimal",
-            precision: 10,
-            scale: 2,
-            isNullable: false,
+            type: "integer",
+            default: 0,
           },
           {
             name: "description",

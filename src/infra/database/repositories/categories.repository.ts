@@ -4,7 +4,6 @@ import { ICategoriesRepository } from "../../../core/interfaces/categoriesReposi
 
 import {
   ICreateCategoryDTO,
-  IResponseCategoryDTO,
   IUpdateCategoryDTO,
 } from "../../../core/dtos/category.dtos";
 
@@ -27,8 +26,11 @@ class CategoriesRepository implements ICategoriesRepository {
     return await this.repository.findOneBy({ name });
   }
 
-  async findAll(): Promise<Category[] | null> {
-    return await this.repository.find();
+  async find(skip?: number, take?: number): Promise<Category[] | null> {
+    return await this.repository.find({
+      skip,
+      take,
+    });
   }
 
   async create(categoryDTO: ICreateCategoryDTO): Promise<void> {

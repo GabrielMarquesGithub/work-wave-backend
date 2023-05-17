@@ -14,6 +14,11 @@ const imageUpload = multer(multerConfig);
 categoriesRoutes.get("/", categoriesControllers.findAll);
 
 categoriesRoutes.get(
+  "/home",
+  categoriesControllers.findWithServicesAndServicesImages
+);
+
+categoriesRoutes.get(
   "/:id",
   categoriesControllers.findOneByIdWithServicesAndServicesImages
 );
