@@ -4,6 +4,7 @@ import { IUsersRepository } from "../../core/interfaces/usersRepository.interfac
 import { IStorageProvider } from "../../core/interfaces/storageProvider.interface";
 import {
   ICreateUserRequestDTO,
+  IResponseUserDTO,
   IUpdateUserDTO,
   IUpdateUserRequestDTO,
 } from "../../core/dtos/user.dtos";
@@ -21,6 +22,7 @@ import { formatCEP } from "../../core/utils/formatting/formatCEP";
 import { formatPhone } from "../../core/utils/formatting/formatPhone";
 
 import { User } from "../database/entities/user.entity";
+import { UserMapper } from "../server/mappers/user.mapper";
 
 class UsersServices {
   private usersRepository: IUsersRepository;
@@ -42,6 +44,10 @@ class UsersServices {
     }
 
     return user;
+  }
+
+  async findOneById(id: string): Promise<IResponseUserDTO> {
+    return UserMapper.toDTO(await this.checkIfUserExists(id));
   }
 
   async create(userDTO: ICreateUserRequestDTO): Promise<void> {

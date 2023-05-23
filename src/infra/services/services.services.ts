@@ -39,11 +39,34 @@ class ServicesServices {
     return service;
   }
 
-  async findByUserIdWithServicesImages(
+  async findOneByIdWithServicesImagesAndUser(
     id: string
+  ): Promise<IResponseServiceDTO> {
+    const service =
+      await this.servicesRepository.findOneByIdWithServicesImagesAndUser(id);
+
+    if (!service) {
+      throw new AppError("Service does not exist", 404);
+    }
+
+    return ServiceMapper.toDTO(service);
+  }
+
+  async findByUserIdWithServicesImages(
+    id: string,
+    page: number = 1,
+    limit: number = 30,
+    order: ServiceOrderOptions = "recentDate"
   ): Promise<IResponseServiceDTO[]> {
+    const skip = (page - 1) * limit;
+
     const services =
-      (await this.servicesRepository.findByUserIdWithServicesImages(id)) ?? [];
+      (await this.servicesRepository.findByUserIdWithServicesImages(
+        id,
+        skip,
+        limit,
+        order
+      )) ?? [];
     return services.map((service) => ServiceMapper.toDTO(service));
   }
 

@@ -1,4 +1,5 @@
 import { User } from "../../infra/database/entities/user.entity";
+import { IResponseServiceDTO } from "./service.dtos";
 
 export interface ICreateUserDTO
   extends Pick<User, "name" | "email" | "phone" | "cep" | "password"> {}
@@ -16,10 +17,9 @@ export interface IUpdateUserRequestDTO
   extends Pick<User, "id" | "name" | "email" | "phone" | "cep"> {}
 
 export interface IResponseUserDTO
-  extends Pick<
-    User,
-    "id" | "name" | "email" | "phone" | "cep" | "avatar_url"
-  > {}
+  extends Pick<User, "id" | "name" | "email" | "phone" | "cep" | "avatar_url"> {
+  services: IResponseServiceDTO[] | null;
+}
 
 export interface IAuthenticationUserDTO
   extends Pick<User, "email" | "password"> {}

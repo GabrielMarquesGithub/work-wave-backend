@@ -16,7 +16,7 @@ class CategoryMapper {
     };
   }
 
-  static handleServices(
+  private static handleServices(
     services: Service[] | null
   ): IResponseServiceDTO[] | null {
     if (!services || services.length === 0) return null;

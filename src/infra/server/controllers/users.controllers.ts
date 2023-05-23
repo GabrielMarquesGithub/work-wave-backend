@@ -5,12 +5,27 @@ import {
   IUpdateUserRequestDTO,
 } from "../../../core/dtos/user.dtos";
 
+import { ServiceOrderOptions } from "../../configs/orderConstants";
+
 import { UsersRepository } from "../../database/repositories/users.repository";
 import { UsersServices } from "../../services/users.services";
 import { LocalStorageProvider } from "../../providers/localStorage.provider";
+import { ServicesRepository } from "../../database/repositories/services.repository";
+import { ServicesImagesRepository } from "../../database/repositories/servicesImages.repository";
+import { ServicesServices } from "../../services/services.services";
+
+const storageProvider = new LocalStorageProvider();
+
+const servicesRepository = new ServicesRepository();
+const servicesImagesRepository = new ServicesImagesRepository();
+
+const servicesServices = new ServicesServices(
+  servicesRepository,
+  servicesImagesRepository,
+  storageProvider
+);
 
 const usersRepository = new UsersRepository();
-const storageProvider = new LocalStorageProvider();
 const usersServices = new UsersServices(usersRepository, storageProvider);
 
 // Tipo criado para prevenção de falhas
@@ -19,6 +34,27 @@ interface IUpdateRequestBody extends IUpdateUserRequestDTO {
 }
 
 class UsersControllers {
+  async findOneByIdWithServicesAndServicesImages(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const { id } = req.params;
+    const { page, limit, order } = req.query;
+
+    const user = await usersServices.findOneById(id);
+    const services = await servicesServices.findByUserIdWithServicesImages(
+      id,
+      // Por padrão  o typeorm interpreta os query corretamente como number
+      page as unknown as number,
+      limit as unknown as number,
+      order as unknown as ServiceOrderOptions
+    );
+
+    user.services = services;
+
+    return res.json(user);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     const userDTO = req.body as ICreateUserRequestDTO;
 

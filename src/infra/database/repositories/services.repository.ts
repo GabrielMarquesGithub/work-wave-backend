@@ -26,10 +26,27 @@ class ServicesRepository implements IServicesRepository {
     return await this.repository.findOneBy({ id });
   }
 
-  async findByUserIdWithServicesImages(id: string): Promise<Service[] | null> {
+  async findOneByIdWithServicesImagesAndUser(
+    id: string
+  ): Promise<Service | null> {
+    return await this.repository.findOne({
+      where: { id },
+      relations: { images: true, user: true },
+    });
+  }
+
+  async findByUserIdWithServicesImages(
+    id: string,
+    skip: number,
+    take: number,
+    order: ServiceOrderOptions
+  ): Promise<Service[] | null> {
     return await this.repository.find({
       where: { user_id: id },
       relations: { images: true },
+      order: serviceOrderConstants[order],
+      skip,
+      take,
     });
   }
 

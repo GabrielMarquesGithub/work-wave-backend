@@ -22,6 +22,19 @@ const servicesServices = new ServicesServices(
 );
 
 class ServicesControllers {
+  async findOneByIdWithServicesImagesAndUser(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const { id } = req.params;
+
+    const service = await servicesServices.findOneByIdWithServicesImagesAndUser(
+      id
+    );
+
+    return res.json(service);
+  }
+
   async findByUserIdWithServicesImages(
     req: Request,
     res: Response

@@ -1,6 +1,7 @@
 import { Service } from "../../infra/database/entities/service.entity";
 
 import { IResponseServiceImageDTO } from "./serviceImage.dtos";
+import { IResponseUserDTO } from "./user.dtos";
 
 export interface ICreateServiceDTO
   extends Pick<
@@ -58,6 +59,9 @@ export interface IUpdateServiceRequestDTO
 type ResponseServiceType = Pick<
   Service,
   "id" | "name" | "price" | "discount" | "description" | "observation"
-> & { images: IResponseServiceImageDTO[] | null };
+> & {
+  images: IResponseServiceImageDTO[] | null;
+  user: IResponseUserDTO | null;
+};
 
 export interface IResponseServiceDTO extends ResponseServiceType {}

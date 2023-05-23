@@ -5,7 +5,13 @@ import { ServiceOrderOptions } from "../../infra/configs/orderConstants";
 
 export interface IServicesRepository {
   findOneById(id: string): Promise<Service | null>;
-  findByUserIdWithServicesImages(id: string): Promise<Service[] | null>;
+  findOneByIdWithServicesImagesAndUser(id: string): Promise<Service | null>;
+  findByUserIdWithServicesImages(
+    id: string,
+    skip: number,
+    take: number,
+    order: ServiceOrderOptions
+  ): Promise<Service[] | null>;
   findByCategoryIdWithServicesImages(
     id: string,
     skip: number,

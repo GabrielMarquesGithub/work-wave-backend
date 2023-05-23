@@ -16,12 +16,17 @@ servicesRoutes.get(
   servicesControllers.findBySearchTextWithServicesImages
 );
 
-servicesRoutes.use(ensureAuthentication);
-
 servicesRoutes.get(
   "/user/:id",
   servicesControllers.findByUserIdWithServicesImages
 );
+
+servicesRoutes.get(
+  "/:id",
+  servicesControllers.findOneByIdWithServicesImagesAndUser
+);
+
+servicesRoutes.use(ensureAuthentication);
 
 servicesRoutes.post("/", servicesControllers.create);
 

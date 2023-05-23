@@ -11,6 +11,11 @@ const usersControllers = new UsersControllers();
 
 const imageUpload = multer(multerConfig);
 
+usersRoutes.get(
+  "/:id",
+  usersControllers.findOneByIdWithServicesAndServicesImages
+);
+
 usersRoutes.post("/", usersControllers.create);
 
 usersRoutes.use(ensureAuthentication);
