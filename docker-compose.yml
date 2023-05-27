@@ -16,6 +16,13 @@ services:
       - postgres-data:/data/postgres
     networks:
       - database-network
+  redis:
+    image: redis:alpine
+    container_name: work-wave-container-redis
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - database-network
   backend:
     container_name: work-wave-container-backend
     build:
