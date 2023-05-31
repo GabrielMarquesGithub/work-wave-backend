@@ -1,12 +1,19 @@
+import "dotenv/config"; // Carregando as variáveis de ambiente
 import { DataSourceOptions } from "typeorm";
 
-const MIGRATIONS_PATH = "src/database/migrations/*.ts";
-const ENTITIES_PATH = "src/database/entities/*.ts";
+const itIsDevEnv = process.env.NODE_ENV === "dev";
+
+const MIGRATIONS_PATH = itIsDevEnv
+  ? "src/database/migrations/*.ts"
+  : "dist/database/migrations/*.js";
+const ENTITIES_PATH = itIsDevEnv
+  ? "src/database/entities/*.ts"
+  : "dist/database/entities/*.js";
 
 const typeormDataSourceConfig: DataSourceOptions = {
   type: "postgres",
   host: process.env.POSTGRES_DB_HOST,
-  port: Number(process.env.POSTGRES_DB_PORT),
+  port: 5432,
   username: process.env.POSTGRES_DB_USER,
   password: process.env.POSTGRES_DB_PASSWORD,
   database: process.env.POSTGRES_DB_NAME,

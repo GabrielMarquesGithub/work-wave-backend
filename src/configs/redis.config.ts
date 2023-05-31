@@ -3,7 +3,7 @@ import { RedisOptions } from "ioredis";
 const redisClientConfig: RedisOptions = {
   enableOfflineQueue: false,
   host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT),
+  port: 6379,
 };
 
 export { redisClientConfig };
