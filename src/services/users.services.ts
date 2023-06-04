@@ -78,6 +78,10 @@ class UsersServices {
     validateCEPFormat(userDTO.cep);
     validatePhoneFormat(userDTO.phone);
 
+    if (userDTO.password) {
+      validatePasswordFormat(userDTO.password);
+    }
+
     userDTO.cep = formatCEP(userDTO.cep);
     userDTO.phone = formatPhone(userDTO.phone);
 
@@ -94,6 +98,11 @@ class UsersServices {
           400
         );
       }
+    }
+
+    if (userDTO.password) {
+      // Criptografando a senha antes de salvar
+      userDTO.password = await hash(userDTO.password, 10);
     }
 
     await this.usersRepository.update(user, userDTO);

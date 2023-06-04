@@ -5,14 +5,21 @@ import { UsersTokensRepository } from "../../database/repositories/usersTokens.r
 import { AuthenticationServices } from "../../services/authentication.services";
 import { IAuthenticationUserDTO } from "../../dtos/user.dtos";
 import { DateProvide } from "../../providers/date.provider";
+import { EmailProvider } from "../../providers/email.provider";
+import { emailConfig } from "../../configs/email.config";
 
 const usersRepository = new UsersRepository();
 const usersTokensRepository = new UsersTokensRepository();
 const dateProvider = new DateProvide();
+const emailProvider = new EmailProvider(
+  emailConfig.email ?? "",
+  emailConfig.password ?? ""
+);
 const authenticationServices = new AuthenticationServices(
   usersRepository,
   usersTokensRepository,
-  dateProvider
+  dateProvider,
+  emailProvider
 );
 
 class AuthenticationControllers {
@@ -24,6 +31,25 @@ class AuthenticationControllers {
     );
 
     return res.json(token);
+  }
+
+  async createSessionWithCode(req: Request, res: Response): Promise<Response> {
+    const { email, password } = req.body as IAuthenticationUserDTO;
+
+    const token = await authenticationServices.validatePasswordChangeCode(
+      email,
+      password
+    );
+
+    return res.json(token);
+  }
+
+  async recoverPassword(req: Request, res: Response): Promise<Response> {
+    const { email } = req.body;
+
+    await authenticationServices.validatePasswordChange(email);
+
+    return res.status(204).send();
   }
 
   async refreshToken(req: Request, res: Response): Promise<Response> {

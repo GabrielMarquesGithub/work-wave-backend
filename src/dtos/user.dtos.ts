@@ -9,12 +9,15 @@ export interface ICreateUserRequestDTO
 
 // Criação de uma tipagem mais complexa
 type UpdateUserType = Pick<User, "id" | "name" | "email" | "phone" | "cep"> &
-  Partial<Pick<User, "avatar" | "avatar_url">>;
+  Partial<Pick<User, "password" | "avatar" | "avatar_url">>;
 
 export interface IUpdateUserDTO extends UpdateUserType {}
 
 export interface IUpdateUserRequestDTO
-  extends Pick<User, "id" | "name" | "email" | "phone" | "cep"> {}
+  extends Pick<
+    IUpdateUserDTO,
+    "id" | "name" | "email" | "password" | "phone" | "cep"
+  > {}
 
 export interface IResponseUserDTO
   extends Pick<User, "id" | "name" | "email" | "phone" | "cep" | "avatar_url"> {

@@ -28,11 +28,6 @@ const servicesServices = new ServicesServices(
 const usersRepository = new UsersRepository();
 const usersServices = new UsersServices(usersRepository, storageProvider);
 
-// Tipo criado para prevenção de falhas
-interface IUpdateRequestBody extends IUpdateUserRequestDTO {
-  password?: string;
-}
-
 class UsersControllers {
   async findOneByIdWithServicesAndServicesImages(
     req: Request,
@@ -65,7 +60,7 @@ class UsersControllers {
 
   async update(req: Request, res: Response): Promise<Response> {
     //lidando com um possível erro na requisição
-    const { password, ...userDTO } = req.body as IUpdateRequestBody;
+    const userDTO = req.body as IUpdateUserRequestDTO;
 
     await usersServices.update(userDTO);
 

@@ -11,6 +11,18 @@ class DateProvide implements IDateProvider {
     const formattedDate = dayjs().add(days, "days").toISOString();
     return this.getDate(formattedDate);
   }
+
+  addMinutes(minutes: number): Date {
+    const formattedDate = dayjs().add(minutes, "minutes").toISOString();
+    return this.getDate(formattedDate);
+  }
+
+  isValidDate(date: Date): boolean {
+    const currentDate = dayjs();
+    const providedDate = dayjs(date);
+
+    return providedDate.isAfter(currentDate);
+  }
 }
 
 export { DateProvide };
